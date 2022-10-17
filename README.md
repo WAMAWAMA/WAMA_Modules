@@ -1,4 +1,4 @@
-# ω👁м👁 modules
+# ωαмα m⚙️dules 
 A modular PyTorch-based neural network library, just for building networks flexibly ~
 
 A net work can be split into few modules, such like
