@@ -29,9 +29,38 @@ input = torch.ones([3,3,128,128])
 
 ```
 
+# 3 All modules (or functions)
+
+## 3.1 `Base module`
+
+### Pooling
+ - `GlobalAvgPool`
+ - `GlobalMaxPool`
+ - `GlobalMaxAvgPool`
+
+### Norm&Activation
+ - `customLayerNorm`
+ - `MakeNorm`
+ - `MakeActive`
+ - `MakeConv`
+
+
+### Conv
+ - `ConvNormActive`
 
 
 
+### MLP
+ - `xxx`
+
+
+## 3.2 `utils`
+ - `resizeTensor`
+ - `tensor2array`
+
+## 3.3 `Attention`
+ - `xxx`
+ - `xxx`
 
 
 
