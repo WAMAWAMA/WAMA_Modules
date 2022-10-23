@@ -3,6 +3,15 @@ import torch
 import torch.nn.functional as F
 
 
+
+class tmp_class():
+    """
+    for debug
+    """
+    def __init__(self,):
+        super().__init__()
+
+
 def resizeTensor(x, scale_factor=None, size=None):
     """
     resize for 1D\2D\3D tensor (1D → signal  2D → image, 3D → volume)
