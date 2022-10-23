@@ -44,10 +44,11 @@ input = torch.ones([3,3,128,128])
  - `MakeActive`
  - `MakeConv`
 
-
 ### Conv
  - `ConvNormActive`
-
+ - `???`
+ - `???`
+ - `???`
 
 
 ### MLP
@@ -72,6 +73,20 @@ input = torch.ones([3,3,128,128])
  - `???`
  - `???`
 
+
+## 3.4 `Encoder`
+ - `???`
+
+
+
+## 3.5 `Decoder`
+ - `???`
+
+
+## 5.6 `Neck`
+ - `???`
+fpn?
+   
 
 
 
