@@ -46,9 +46,10 @@ input = torch.ones([3,3,128,128])
 
 ### Conv
  - `ConvNormActive`
- - `???`
- - `???`
- - `???`
+ - `VGGBlock`
+ - `VGGStage`
+ - `ResBlock`
+ - `ResStage`
 
 
 ### MLP
