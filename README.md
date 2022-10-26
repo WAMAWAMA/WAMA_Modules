@@ -5,7 +5,7 @@ A modular PyTorch-based neural network library, just for building 1D/2D/3D netwo
 Highlights (*Simple! Easy to use! Flexible! Feature-rich!*)
  - No complex class inheritance or nesting, and the forward process is shown succinctly
  - No complex input parameters, but output as many features as possible for fast reuse
- - There is no dimension restriction, 1D or 2D or 3D networks are all supported
+ - No dimension restriction, 1D or 2D or 3D networks are all supported
 
 
 ## 1. Installation
