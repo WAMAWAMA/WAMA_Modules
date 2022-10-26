@@ -1,22 +1,39 @@
 # ωαмα m⚙️dules 
-A modular PyTorch-based neural network library, just for building 1D/2D/3D/ND networks flexibly ~
-
-A net work can be split into few modules, such like
- - vgg = encoder + cls head
- - Unet
- - resnet
- - densenet
- - deeplabv3
+A modular PyTorch-based neural network library, just for building 1D/2D/3D networks flexibly ~
 
 
-# Main modules
+Highlights (*Simple! Easy to use! Flexible! Feature-rich!*)
+ - No complex class inheritance or nesting, and the forward process is shown succinctly
+ - No complex input parameters, but output as many features as possible for fast reuse
+ - There is no dimension restriction, 1D or 2D or 3D networks are all supported
+
+
+## 1. Installation
+Use the following command to install ωαмα m⚙️dules 
+```
+pip install git+https://github.com/WAMAWAMA/wama_modules.git
+```
+
+Or you can directly copy the `wama_modules` directory to use
+
+
+## 2. How to build a network modularly?
+A network can be split into few modules, such like
+ - vgg = vgg_encoder + cls_head
+ - Unet = encoder + decoder + seg_ead
+ - resnet = resnet_encoder + cls_head
+ - densenet = densenet_encoder + cls_head
+ - a multi-task net for classification and segmentation = encoder + decoder + cls_head + seg_head
+
+
+## 3. Main modules
  - resblock？
  - dense block
  - decoder block
  - transformer block
 
 
-# Example
+## 4. Example
 ```python
 import wama_modules as ws
 import torch
@@ -29,22 +46,22 @@ input = torch.ones([3,3,128,128])
 
 ```
 
-# 3 All modules (or functions)
+## 5. All modules (or functions)
 
-## 3.1 `Base module`
+### 5.1 `Base module`
 
-### Pooling
+#### Pooling
  - `GlobalAvgPool`
  - `GlobalMaxPool`
  - `GlobalMaxAvgPool`
 
-### Norm&Activation
+#### Norm&Activation
  - `customLayerNorm`
  - `MakeNorm`
  - `MakeActive`
  - `MakeConv`
 
-### Conv
+#### Conv
  - `ConvNormActive`
  - `VGGBlock`
  - `VGGStage`
@@ -52,14 +69,14 @@ input = torch.ones([3,3,128,128])
  - `ResStage`
 
 
-### MLP
+#### MLP
  - `???`
  - `???`
  - `???`
  - `???`
 
 
-## 3.2 `utils`
+### 5.2 `utils`
  - `resizeTensor`
  - `tensor2array`
  - `???`
@@ -67,24 +84,24 @@ input = torch.ones([3,3,128,128])
  - `???`
  - `???`
 
-## 3.3 `Attention`
+### 5.3 `Attention`
  - `SCSEModule`
  - `NonLocal`
  - `???`
  - `???`
  - `???`
+STN?
 
-
-## 3.4 `Encoder`
+### 5.4 `Encoder`
  - `???`
 
 
 
-## 3.5 `Decoder`
+### 5.5 `Decoder`
  - `???`
 
 
-## 5.6 `Neck`
+### 5.6 `Neck`
  - `FPN`
  - `???`
    

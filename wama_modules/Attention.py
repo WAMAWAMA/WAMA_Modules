@@ -188,3 +188,8 @@ class NonLocal(nn.Module):
         z = W_y + x
 
         return z
+
+
+
+
+STN
