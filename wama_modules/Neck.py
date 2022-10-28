@@ -12,7 +12,7 @@ class FPN(nn.Module):
                  active='relu',
                  norm='bn',
                  gn_c=8,
-                 mode='AddSmall2Big',  # AddSmall2Big or AddBig2Small
+                 mode='AddSmall2Big',  # AddSmall2Big or AddBig2Small(much better or classification tasks)
                  dim=2,
                  ):
         super().__init__()
@@ -54,7 +54,7 @@ class FPN(nn.Module):
                  active='relu',
                  norm='bn',
                  gn_c=8,
-                 mode='AddBig2Small',
+                 mode='AddBig2Small', # revserse, for classification
                  dim=1,)
         f_list = fpn(x_list)
         _ = [print(i.shape) for i in x_list]
@@ -81,7 +81,7 @@ class FPN(nn.Module):
                  active='relu',
                  norm='bn',
                  gn_c=8,
-                 mode='AddBig2Small',
+                 mode='AddBig2Small', # revserse, for classification
                  dim=2,)
         f_list = fpn(x_list)
         _ = [print(i.shape) for i in x_list]
@@ -109,7 +109,7 @@ class FPN(nn.Module):
                  active='relu',
                  norm='bn',
                  gn_c=8,
-                 mode='AddBig2Small',
+                 mode='AddBig2Small', # revserse, for classification
                  dim=3,)
         f_list = fpn(x_list)
         _ = [print(i.shape) for i in x_list]

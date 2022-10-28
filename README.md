@@ -107,9 +107,10 @@ STN?
  - `???`
 
 ### 5.7 `Transformer`
- - `SelfAttention`
- - `CrossAttention`
- - `Transformer_encoder`
+ - `FeedForward`
+ - `MultiHeadAttention`
+ - `TransformerEncoderLayer`
+ - `TransformerDecoderLayer`
  - `???`
 
 
