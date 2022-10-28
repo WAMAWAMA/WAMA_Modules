@@ -65,6 +65,16 @@ class SelfAttention(nn.Module):
         ) if project_out else nn.Identity()
 
     def forward(self, x):
+        """
+        x = torch.ones([3, 5, 512])
+        dim = 512
+        heads = 8
+        dim_head = 32
+        dim = 512
+        attention_layer = SelfAttention(dim, heads, dim_head)
+        x_, attention_maps = attention_layer(x)
+        print(x.shape, x_.shape)
+        """
         b, n, _, h = *x.shape, self.heads
         qkv = self.to_qkv(x).chunk(3, dim=-1)
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=h), qkv)
@@ -106,12 +116,15 @@ class CrossAttention(nn.Module):
     def forward(self, q_tokens, kv_tokens):
         """
         q_tokens = torch.ones([3, 5, 512])
-        kv_tokens = torch.ones([3, 20, 512])
+        kv_tokens = torch.ones([3, 30, 512])
         dim = 512
         heads = 8
         dim_head = 32
         dim = 512
-        self = tmp_class()
+        attention_layer = CrossAttention(dim, heads, dim_head)
+        q_tokens_, attention_maps = attention_layer(q_tokens, kv_tokens)
+        print(q_tokens.shape, q_tokens_.shape)
+
         """
         b_q, n_q, _, h_q = *q_tokens.shape, self.heads
         b_kv, n_kv, _, h_kv = *kv_tokens.shape, self.heads
