@@ -33,7 +33,12 @@ A network can be split into few modules, such like
  - transformer block
 
 
-## 4. Example
+## 4. Examples
+
+
+Build a 3D resnet50 
+
+
 ```python
 import wama_modules as ws
 import torch
@@ -43,12 +48,130 @@ decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
 
 input = torch.ones([3,3,128,128])
 
+```
+
+
+
+
+
+More demos are shown below (Click to view codes), or you can visit the `demo` folder for more demo codes
+<details>
+<summary> Demo1: Build a resnet50  </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
 
 ```
+</details>
+
+
+
+<details>
+<summary> Demo2: Build a vgg16  </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
+<details>
+<summary> Demo3: Build a Unet  </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
+<details>
+<summary> Demo4: Build a Unet with resnet50 encoder  </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+<details>
+<summary> Demo4: Build a multi-task model for segmentation and classification</summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
+
+<details>
+<summary> Demo5: Build a C-tran model </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
+<details>
+<summary> Demo5: Build a Q2L model  </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
 
 ## 5. All modules (or functions)
 
-### 5.1 `Base module`
+### 5.1 `wama_modules.BaseModule`
 
 #### Pooling
  - `GlobalAvgPool`
@@ -69,50 +192,32 @@ input = torch.ones([3,3,128,128])
  - `ResStage`
 
 
-#### MLP
- - `???`
- - `???`
- - `???`
- - `???`
-
-
-### 5.2 `utils`
+### 5.2 `wama_modules.utils`
  - `resizeTensor`
  - `tensor2array`
- - `???`
- - `???`
- - `???`
- - `???`
 
-### 5.3 `Attention`
+
+### 5.3 `wama_modules.Attention`
  - `SCSEModule`
  - `NonLocal`
- - `???`
- - `???`
- - `???`
-STN?
 
-### 5.4 `Encoder`
+
+### 5.4 `wama_modules.Encoder`
  - `???`
 
 
-
-### 5.5 `Decoder`
+### 5.5 `wama_modules.Decoder`
  - `UNet_decoder`
- - `???`
 
 
-### 5.6 `Neck`
+### 5.6 `wama_modules.Neck`
  - `FPN`
- - `???`
 
-### 5.7 `Transformer`
+
+### 5.7 `wama_modules.Transformer`
  - `FeedForward`
  - `MultiHeadAttention`
  - `TransformerEncoderLayer`
  - `TransformerDecoderLayer`
- - `???`
-
-
 
 
