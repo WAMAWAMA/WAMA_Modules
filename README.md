@@ -9,16 +9,16 @@ Highlights (*Simple-to-use & Function-rich!*)
 
 
 ## 1. Installation
-Use the following command to install `wama_modules` 
+ - Use the following command to install `wama_modules` 
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
 ```
 
-Or you can directly copy the `wama_modules` directory to use
+ Or you can directly copy the `wama_modules` directory to use
 
----
-Optional: Highly recommended to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch), 
-which contains many 2D networks that can be used with this  `wama_modules` library 
+
+ - *Optional* : Highly recommended to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch), 
+a 2D networks lib that can be used with this library 
 
 Use the following command to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch)
 ```
