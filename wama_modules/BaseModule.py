@@ -500,7 +500,8 @@ class ResStage(nn.Module):
 
 
 
-
+# densenet
+# https://blog.csdn.net/qq_44766883/article/details/112011420
 
 
 

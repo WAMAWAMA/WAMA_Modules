@@ -16,6 +16,16 @@ pip install git+https://github.com/WAMAWAMA/wama_modules.git
 
 Or you can directly copy the `wama_modules` directory to use
 
+---
+Optional: Highly recommended to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch), 
+which contains many 2D networks that can be used with this  `wama_modules` library 
+
+Use the following command to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch)
+```
+pip install git+https://github.com/qubvel/segmentation_models.pytorch
+```
+
+
 
 ## 2. How to build a network modularly?
 
@@ -239,6 +249,37 @@ input = torch.ones([3,3,128,128])
 
 <details>
 <summary> Demo12: Build a UCTransNet model for segmentation </summary>
+ 
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+<details>
+<summary> Demo13: Build a model for multiple inputs (1D signal and 2D image) </summary>
+
+```python
+import wama_modules as ws
+import torch
+
+encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
+decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+
+input = torch.ones([3,3,128,128])
+
+```
+</details>
+
+
+<details>
+<summary> Demo14: Build a 2D Unet with pretrained Resnet50 encoder (1D signal and 2D image) </summary>
  
 ```python
 import wama_modules as ws
