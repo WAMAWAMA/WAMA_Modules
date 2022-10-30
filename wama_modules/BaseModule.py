@@ -74,7 +74,7 @@ class GlobalMaxAvgPool(nn.Module):
         return (self.GMP(inputs) + self.GAP(inputs))/2.
 
 
-def customLayerNorm(x, esp = 1e-6):
+def customLayerNorm(x, esp=1e-6):
     """
     :param x: [bz, c, **shape] 1D/2D/3D
     :return:
@@ -116,7 +116,7 @@ def customLayerNorm(x, esp = 1e-6):
     return y
 
 
-def MakeNorm(dim, channel, norm='bn', gn_c = 8):
+def MakeNorm(dim, channel, norm='bn', gn_c=8):
     """
     :param dim: input dimetions, 1D/2D/3D
     :param norm: bn(batch) or gn(group) or in(instance) or ln(layer) or None(identity mapping)
@@ -159,13 +159,13 @@ def MakeActive(active='relu'):
         raise ValueError('should be relu or leakyrelu')
 
 
-def MakeConv(in_channels, out_channels, kernel_size, padding=1, stride=1, dim = 2):
+def MakeConv(in_channels, out_channels, kernel_size, padding=1, stride=1, dim=2, bias=False):
     if dim == 1:
-        return nn.Conv1d(in_channels, out_channels, kernel_size, padding=padding, stride=stride)
+        return nn.Conv1d(in_channels, out_channels, kernel_size, padding=padding, stride=stride, bias=bias)
     elif dim == 2:
-        return nn.Conv2d(in_channels, out_channels, kernel_size, padding=padding, stride=stride)
+        return nn.Conv2d(in_channels, out_channels, kernel_size, padding=padding, stride=stride, bias=bias)
     elif dim == 3:
-        return nn.Conv3d(in_channels, out_channels, kernel_size, padding=padding, stride=stride)
+        return nn.Conv3d(in_channels, out_channels, kernel_size, padding=padding, stride=stride, bias=bias)
 
 
 class ConvNormActive(nn.Module):
@@ -346,11 +346,11 @@ class ResBlock(nn.Module):
     """
     there two types of ResBlock
 
-    type1: '33', used for ResNet18 and ResNet34
+    type1: '33', called BasicBlock, used for ResNet 18 and 34
     x_in → conv3x3 → norm → active → conv3x3 → norm → active → x_out
         ↘--→ conv1x1 if in_c != out_c) ---↗
 
-    type1: '131', used for ResNet50 and ResNet101 and ResNet152
+    type1: '131', called BasicBlock, used for ResNet 50 and 101 and 152
     x_in → conv3x3 → norm → active → conv3x3 → norm → active → x_out
         ↘--→ conv1x1 if in_c != out_c) ---↗
     """
@@ -498,10 +498,165 @@ class ResStage(nn.Module):
         return x
 
 
+"""
+resnet block: conv norm active
+dense block: norm active conv
+Code of densent is modified based on  https://github.com/ZhugeKongan/torch-template-for-deep-learning/blob/main/models/ClassicNetwork/DenseNet.py
+"""
 
 
-# densenet
-# https://blog.csdn.net/qq_44766883/article/details/112011420
+class NormActiveConv(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1, kernel_size = 3, norm='bn', active='relu', gn_c=8, dim=2, padding=1):
+        """
+        # convolution + normalization + activation
+        :param in_channels:
+        :param out_channels:
+        :param stride:
+        :param kernel_size:
+        :param norm: bn(batch) or gn(group) or in(instance) or ln(layer) or None(identity mapping)
+        :param active: relu or leakyrelu or None(identity mapping)
+        :param gn_c: coordinate groups of gn
+        :param dim: 1\2\3D network
+        """
+        super().__init__()
+
+        self.norm = MakeNorm(dim, in_channels, norm, gn_c)
+        self.active = MakeActive(active)
+        self.conv = MakeConv(in_channels, out_channels, kernel_size, padding=padding, stride=stride, dim = dim)
+
+    def forward(self, x):
+        """
+        # demo
+        x = torch.randn([12,16,2]) # 1D
+        dim = 1
+        layer = NormActiveConv(16, 32, 1, 3, 'gn', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'ln', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'in', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'bn', 'relu', 8, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        x = torch.randn([12,16,2,2]) # 2D
+        dim = 2
+        layer = NormActiveConv(16, 32, 1, 3, 'gn', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'ln', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'in', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'bn', 'relu', 8, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        x = torch.randn([12,16,2,2,2]) # 2D
+        dim = 3
+        layer = NormActiveConv(16, 32, 1, 3, 'gn', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'ln', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'in', 'relu', 8, dim = dim)
+        layer = NormActiveConv(16, 32, 1, 3, 'bn', 'relu', 8, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        """
+        out = self.norm(x)
+        out = self.active(out)
+        out = self.conv(out)
+        return out
+
+
+class DenseLayer(nn.Module):
+    def __init__(self, inplace, growth_rate, bn_size, norm='bn', active='relu', gn_c=8, dim=2):
+        """
+
+        :param inplace: input channel
+        :param growth_rate: every added channel
+        :param bn_size: something like the middle channel in ResBlock
+        :param norm: se MakeNorm
+        :param active: 'relu' or others, see MakeActive
+        :param gn_c: se MakeNorm
+        :param dim: 1\2\3
+        """
+        super().__init__()
+        self.dense_layer = nn.Sequential(
+            NormActiveConv(inplace, bn_size * growth_rate, stride=1, kernel_size=1, padding=0, norm=norm, active=active, gn_c=gn_c, dim=dim),
+            NormActiveConv(bn_size * growth_rate, growth_rate, stride=1, kernel_size=3, padding=1, norm=norm, active=active, gn_c=gn_c, dim=dim),
+        )
+
+    def forward(self, x):
+        '''
+        # demo
+        x = torch.randn([12,16,2]) # 1D
+        dim = 1
+        layer = DenseLayer(inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        layer = DenseLayer(inplace = 16, growth_rate = 32, bn_size = 4, dim = dim, norm='gn')
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        x = torch.randn([12,16,2,2]) # 2D
+        dim = 2
+        layer = DenseLayer(inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        x = torch.randn([12,16,2,2,2]) # 3D
+        dim = 3
+        layer = DenseLayer(inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+
+        '''
+        y = self.dense_layer(x)
+        return torch.cat([x, y], 1)
+
+
+class DenseBlock(nn.Module):
+    def __init__(self, num_layers, inplace, growth_rate, bn_size, norm='bn', active='relu', gn_c=8, dim=2):
+        super(DenseBlock, self).__init__()
+        layers = []
+        for i in range(num_layers):
+            layers.append(DenseLayer(inplace + i * growth_rate, growth_rate, bn_size, norm=norm, active=active, gn_c=gn_c, dim=dim))
+        self.layers = nn.Sequential(*layers)
+
+    def forward(self, x):
+        """
+        # demo
+        x = torch.randn([12,16,2]) # 1D
+        dim = 1
+        layer = DenseBlock(num_layers = 3, inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+        print(16 + 32*3)
+
+        x = torch.randn([12,16,2,2]) # 2D
+        dim = 2
+        layer = DenseBlock(num_layers = 3, inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+        print(16 + 32*3)
+
+        x = torch.randn([12,16,2,2,2]) # 2D
+        dim = 3
+        layer = DenseBlock(num_layers = 3, inplace = 16, growth_rate = 32, bn_size = 4, dim = dim)
+        y = layer(x)
+        print(x.shape)
+        print(y.shape)
+        print(16 + 32*3)
+
+        """
+        return self.layers(x)
+
+
+
+
+
+
+
+
 
 
 
