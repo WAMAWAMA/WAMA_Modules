@@ -1,4 +1,4 @@
-# ωαмα m⚙️dules 
+# ωαмα m⚙️dules
 A PyTorch-based module library for building 1D/2D/3D networks flexibly ~
 
 
@@ -9,7 +9,7 @@ Highlights (*Simple-to-use & Function-rich!*)
 
 
 ## 1. Installation
-⬇️ Use the following command to install ωαмα m⚙️dules 
+Use the following command to install `wama_modules` 
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
 ```
@@ -59,7 +59,7 @@ input = torch.ones([3,3,128,128])
 
 
 
-More demos are shown below (Click to view codes), or you can visit the `demo` folder for more demo codes
+More demos are shown below ↓ (Click to view codes), or you can visit the `demo` folder for more demo codes
 
 
 
