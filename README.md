@@ -9,7 +9,7 @@ Highlights (*Simple-to-use & Function-rich!*)
 
 
 ## 1. Installation
- - 🔥1.1 `wama_modules` (*Basic*) 
+ - 🔥1.1 [`wama_modules`](https://github.com/WAMAWAMA/wama_modules) (*Basic*) 
    
 Install *wama_modules* use ↓
 ```
