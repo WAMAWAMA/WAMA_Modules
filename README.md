@@ -9,20 +9,31 @@ Highlights (*Simple-to-use & Function-rich!*)
 
 
 ## 1. Installation
- - Use the following command to install `wama_modules` 
+ - 🔥1.1 `wama_modules` (*Basic*) 
+   
+Install *wama_modules* use ↓
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
 ```
 
- Or you can directly copy the `wama_modules` directory to use
+ Or you can directly copy the *wama_modules* folder to use
 
 
- - *Optional* : Highly recommended to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch), 
-a 2D networks lib that can be used with this library 
+ - 💧1.2 [`segmentation_models_pytorch`](https://github.com/qubvel/segmentation_models.pytorch) (*Optional*) 
 
-Use the following command to install [`smp`](https://github.com/qubvel/segmentation_models.pytorch)
+*segmentation_models_pytorch* (called *smp*)
+is a 2D CNN lib includes many backbones and decoders, which is highly recommended to install for cooperating with this library. 
+Install *smp* use ↓
 ```
 pip install git+https://github.com/qubvel/segmentation_models.pytorch
+```
+
+ - 💧1.3 [`transformers`](https://github.com/huggingface/transformers) (*Optional*) 
+   
+*transformer* is a lib includes abundant Transformer structures, which is highly recommended to install for cooperating with this library. 
+Install *transformer* use ↓
+```
+pip install transformers
 ```
 
 
