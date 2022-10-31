@@ -40,11 +40,11 @@ pip install transformers
 
 ## 2. How to build a network modularly?
 
-Building a network must follow the following paradigm:
+The paradigm of building networks:
 
-***'Design the architecture according to the tasks, and pick the right modules for the designed architecture'***
+***'Design architecture according to tasks, pick modules according to architecture'***
 
-So, networks for different tasks can be designed modularly such as:
+So, network architectures for different tasks can be viewed modularly such as:
  - vgg = vgg_encoder + cls_head
  - Unet = encoder + decoder + seg_ead
  - resnet = resnet_encoder + cls_head
