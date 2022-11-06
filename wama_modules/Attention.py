@@ -192,4 +192,4 @@ class NonLocal(nn.Module):
 
 
 
-STN
+# STN

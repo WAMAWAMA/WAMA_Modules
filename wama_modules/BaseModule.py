@@ -290,7 +290,7 @@ class VGGStage(nn.Module):
         self.block_num = block_num
         self.dim = dim
 
-        print('VGGStage stage contains ', block_num, ' blocks')
+        # print('VGGStage stage contains ', block_num, ' blocks')
 
         # 构建block
         self.block_list = nn.ModuleList([])
@@ -434,7 +434,6 @@ class ResBlock(nn.Module):
 class ResStage(nn.Module):
     """
     a ResStage contains multiple ResBlocks
-
     """
     def __init__(self, type, in_channels, middle_channels, out_channels, block_num=2, norm='bn', active='relu', gn_c=8, dim=2):
         super().__init__()
@@ -445,7 +444,7 @@ class ResStage(nn.Module):
         self.block_num = block_num
         self.dim = dim
 
-        print('ResStage stage contains ', block_num, ' blocks')
+        # print('ResStage stage contains ', block_num, ' blocks')
 
         # 构建block
         if type == '33':

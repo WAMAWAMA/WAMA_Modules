@@ -1,12 +1,15 @@
 # ωαмα m⚙️dules
-A PyTorch-based module library for building 1D/2D/3D networks flexibly ~
 
+(🚧 still under building, but current module implementations are work...)
+
+*A PyTorch module library for building 1D/2D/3D networks flexibly ~*
 
 Highlights (*Simple-to-use & Function-rich!*)
- - No complex class inheritance or nesting, and the forward process is shown succinctly
- - No complex input parameters, but output as many features as possible for fast reuse
- - No dimension restriction, 1D or 2D or 3D networks are all supported
-
+ - Simple code that show all forward processes succinctly
+ - Output as many features as possible for fast reuse
+ - Support 1D / 2D / 3D networks
+ - Easy to integrate with any other networks
+ - 🚀 Pretrained weights (both 2D and 3D): 20+ `2D networks` and 30+ `3D networks`
 
 ## 1. Installation
  - 🔥1.1 [`wama_modules`](https://github.com/WAMAWAMA/wama_modules) (*Basic*) 
@@ -36,11 +39,18 @@ Install *transformer* use ↓
 pip install transformers
 ```
 
+## 2. Update list
+ - 2022/11/5:  Open the source code, version `v0.0.1-beta`
+ - ...
 
 
-## 2. How to build a network modularly?
+## 3. Main modules and network architectures
+Here I'll give an overview of this repo
 
-The paradigm of building networks:
+## 4. Guideline 1: Build networks modularly
+How to build a network modularly? 
+
+The answer is a paradigm of building networks:
 
 ***'Design architecture according to tasks, pick modules according to architecture'***
 
@@ -52,17 +62,8 @@ So, network architectures for different tasks can be viewed modularly such as:
  - a multi-task net for classification and segmentation = encoder + decoder + cls_head + seg_head
 
 
-## 3. Main modules
- - resblock？
- - dense block
- - decoder block
- - transformer block
 
-
-## 4. Examples
-
-
-Build a 3D resnet50 
+For example, build a 3D resnet50 
 
 
 ```python
@@ -80,7 +81,7 @@ input = torch.ones([3,3,128,128])
 
 
 
-More demos are shown below ↓ (Click to view codes), or you can visit the `demo` folder for more demo codes
+Here are more demos shown below ↓ (Click to view codes), or you can visit the `demo` folder for more demo codes
 
 
 
@@ -337,11 +338,16 @@ input = torch.ones([3,3,128,128])
 
 
 
-## 5. All modules (or functions)
+## 5. Guideline 2: Use pretrained weights
+How to use pretrained weights? 
 
-### 5.1 `wama_modules.BaseModule`
 
-#### 5.1.1 Pooling
+
+## 6. All modules and functions
+
+### 6.1 `wama_modules.BaseModule`
+
+#### 6.1.1 Pooling
  - `GlobalAvgPool` Global average pooling
  - `GlobalMaxPool` Global maximum pooling
  - `GlobalMaxAvgPool` GlobalMaxAvgPool = (GlobalAvgPool + GlobalMaxPool) / 2.
@@ -415,7 +421,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 ```
 </details>
 
-### 5.2 `wama_modules.utils`
+### 6.2 `wama_modules.utils`
  - `resizeTensor` scale torch tensor, similar to scipy's zoom
  - `tensor2array` transform tensor to ndarray
 
@@ -428,7 +434,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 </details>
 
 
-### 5.3 `wama_modules.Attention`
+### 6.3 `wama_modules.Attention`
  - `SCSEModule`
  - `NonLocal`
 
@@ -442,6 +448,9 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 
 
 ### 5.4 `wama_modules.Encoder`
+ - `VGGEncoder`
+ - `ResNetEncoder`
+ - `DenseNetEncoder`
  - `???`
 
 <details>
@@ -527,5 +536,12 @@ _ = [print(i.shape) for i in f_listB]
 </details>
 
 
-## 6. Acknowledgment
+## 7. Acknowledgment
 Thanks to ......
+1) https://github.com/ZhugeKongan/torch-template-for-deep-learning
+2) pytorch vit
+3) smp
+4) transformers
+5) medicalnet
+6)
+
