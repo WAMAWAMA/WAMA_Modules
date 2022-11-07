@@ -121,7 +121,7 @@ class UNet_decoder(nn.Module):
 # try this https://blog.csdn.net/m0_51436734/article/details/124073901
 
 
-# NestedUNet
+# NestedUNet(Unet++)
 
 
 

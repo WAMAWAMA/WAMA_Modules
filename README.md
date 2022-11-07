@@ -21,23 +21,57 @@ pip install git+https://github.com/WAMAWAMA/wama_modules.git
 
  Or you can directly copy the *wama_modules* folder to use
 
-
  - 💧1.2 [`segmentation_models_pytorch`](https://github.com/qubvel/segmentation_models.pytorch) (*Optional*) 
 
-*segmentation_models_pytorch* (called *smp*)
+<details>
+<summary> Introduction and installation command </summary>
+
+`segmentation_models_pytorch` (called *smp*)
 is a 2D CNN lib includes many backbones and decoders, which is highly recommended to install for cooperating with this library. 
-Install *smp* use ↓
+
+Install with pip：
 ```
-pip install git+https://github.com/qubvel/segmentation_models.pytorch
+pip install segmentation-models-pytorch
+```
+Install the latest version:
+```
+pip install git+https://github.com/rwightman/pytorch-image-models.git
 ```
 
+</details>
+
  - 💧1.3 [`transformers`](https://github.com/huggingface/transformers) (*Optional*) 
-   
-*transformer* is a lib includes abundant Transformer structures, which is highly recommended to install for cooperating with this library. 
+
+<details>
+<summary> Introduction and installation command </summary>
+
+`transformer` is a lib includes abundant Transformer structures, which is highly recommended to install for cooperating with this library. 
 Install *transformer* use ↓
 ```
 pip install transformers
 ```
+
+
+</details>
+
+ - 💧1.4 [`timm`](https://github.com/rwightman/pytorch-image-models) (*Optional*) 
+
+<details>
+<summary> Introduction and installation command </summary>
+
+`timm`*` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
+Install *transformer* use ↓
+
+Install with pip:
+```
+pip install timm
+```
+Install the latest version:
+```
+pip install git+https://github.com/rwightman/pytorch-image-models.git
+```
+</details>
+
 
 ## 2. Update list
  - 2022/11/5:  Open the source code, version `v0.0.1-beta`
@@ -81,7 +115,7 @@ input = torch.ones([3,3,128,128])
 
 
 
-Here are more demos shown below ↓ (Click to view codes), or you can visit the `demo` folder for more demo codes
+Here are more demos shown below ↓ (Click to view codes, or visit the `demo` folder)
 
 
 
@@ -339,7 +373,37 @@ input = torch.ones([3,3,128,128])
 
 
 ## 5. Guideline 2: Use pretrained weights
-How to use pretrained weights? 
+
+All pretrained weights are from third-party codes or repos
+
+current pretrained support: (这里给一个表格，来自哪里，多少权重，预训练数据类型，2D还是3D）)
+ - 2D: smp, timm, radimagenet...
+ - 3D: medicalnet, 3D resnet, 3D densenet...
+
+
+### 5.1  smp encoders `2D`
+???
+
+### 5.2  timm encoders `2D`
+???
+
+### 5.2  radimagenet `2D` `medical image`
+???
+
+
+### 5.3 ??? `3D` `video`
+???
+
+### 5.3 ??? `3D` `video`
+???
+
+### 5.3 ??? `3D` `video`
+???
+
+### 5.3 ??? `3D` `medical image`
+???
+
+
 
 
 
@@ -536,12 +600,12 @@ _ = [print(i.shape) for i in f_listB]
 </details>
 
 
-## 7. Acknowledgment
-Thanks to ......
+## 7. Acknowledgment 🥰
+Thanks to these authors and their codes:
 1) https://github.com/ZhugeKongan/torch-template-for-deep-learning
 2) pytorch vit
-3) smp
+3) SMP: https://github.com/qubvel/segmentation_models.pytorch
 4) transformers
 5) medicalnet
-6)
+6) timm: https://github.com/rwightman/pytorch-image-models
 
