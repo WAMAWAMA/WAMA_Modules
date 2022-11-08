@@ -9,11 +9,11 @@ Highlights (*Simple-to-use & Function-rich!*)
  - Output as many features as possible for fast reuse
  - Support 1D / 2D / 3D networks
  - Easy to integrate with any other networks
- - 🚀 Pretrained weights (both 2D and 3D): 20+ `2D networks` and 30+ `3D networks`
+ - 🚀 Abundant Pretrained weights: Including 80000+ `2D weights` and 80+ `3D weights`
 
 ## 1. Installation
  - 🔥1.1 [`wama_modules`](https://github.com/WAMAWAMA/wama_modules) (*Basic*) 
-   
+
 Install *wama_modules* use ↓
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
@@ -382,21 +382,127 @@ current pretrained support: (这里给一个表格，来自哪里，多少权重
 
 
 ### 5.1  smp encoders `2D`
-???
+
+smp (119 pretrained weights)
+
+```python
+import torch
+from wama_modules.thirdparty_lib.SMP_qubvel.encoders import get_encoder
+m = get_encoder('resnet18', in_channels=3, depth=5, weights='ssl')
+m = get_encoder('name', in_channels=3, depth=5, weights='ssl')
+m = get_encoder('resnet18', in_channels=3, depth=5, weights='ss')
+f_list = m(torch.ones([2,3,128,128]))
+_ = [print(i.shape) for i in f_list]
+```
 
 ### 5.2  timm encoders `2D`
-???
+timm (400+ pretrained weights)
+```python
+import timm
+m = timm.create_model(
+    'adv_inception_v3',
+    features_only=True,
+    pretrained=False,)
+f_list = m(torch.ones([2,3,128,128]))
+_ = [print(i.shape) for i in f_list]
+```
+### 5.3  Transformers (🤗 Huggingface )  `2D`
+
+transformers, supper powered by Huggingface ( with 80000+ pretrained weights)
+
+```python
+import torch
+from transformers import ConvNextModel
+from wama_modules.utils import load_weights
+# Initializing a model (with random weights) from the convnext-tiny-224 style configuration
+m = ConvNextModel.from_pretrained('facebook/convnext-base-224-22k')
+f = m(torch.ones([2,3,224,224]), output_hidden_states=True)
+f_list = f.hidden_states
+_ = [print(i.shape) for i in f_list]
+
+weights = m.state_dict()
+m1 = ConvNextModel(m.config)
+m = load_weights(m, weights)
+
+
+import torch
+from transformers import SwinModel
+from wama_modules.utils import load_weights
+
+m = SwinModel.from_pretrained('microsoft/swin-base-patch4-window12-384')
+f = m(torch.ones([2,3,384,384]), output_hidden_states=True)
+f_list = f.reshaped_hidden_states # For transformer, should use reshaped_hidden_states
+_ = [print(i.shape) for i in f_list]
+
+weights = m.state_dict()
+m1 = SwinModel(m.config)
+m = load_weights(m, weights)
+
+
+
+```
 
 ### 5.2  radimagenet `2D` `medical image`
 ???
 
 
-### 5.3 ??? `3D` `video`
-???
+### 5.3 ResNets3D_kenshohara `3D` `video`
+3D ResNets3D_kenshohara (21 weights)
+```python
+ import torch
+    from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet import generate_model
+    from wama_modules.utils import load_weights
+    m = generate_model(18)
+    pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\weights\resnet\r3d18_KM_200ep.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+    m = load_weights(m, pretrain_weights)
+    f_list = m(torch.ones([2,3,64,64,64]))
+    _ = [print(i.shape) for i in f_list]
 
-### 5.3 ??? `3D` `video`
-???
 
+    import torch
+    from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet2p1d import generate_model
+    from wama_modules.utils import load_weights
+    m = generate_model(18)
+    pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\weights\resnet2p1d\r2p1d18_K_200ep.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+    m = load_weights(m, pretrain_weights)
+    f_list = m(torch.ones([2,3,64,64,64]))
+    _ = [print(i.shape) for i in f_list]
+```
+### 5.3 VC3D_kenshohara `3D` `video`
+3D VC3D_kenshohara (13 weights)
+```python
+ import torch
+    from wama_modules.thirdparty_lib.VC3D_kenshohara.resnet import generate_model
+    from wama_modules.utils import load_weights
+    m = generate_model(18)
+    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnet\resnet-18-kinetics.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+    f_list = m(torch.ones([2,3,64,64,64]))
+    _ = [print(i.shape) for i in f_list]
+
+    import torch
+    from wama_modules.thirdparty_lib.VC3D_kenshohara.resnext import generate_model
+    from wama_modules.utils import load_weights
+    m = generate_model(101)
+    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnext\resnext-101-64f-kinetics.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+    f_list = m(torch.ones([2,3,64,64,64]))
+    _ = [print(i.shape) for i in f_list]
+
+    import torch
+    from wama_modules.thirdparty_lib.VC3D_kenshohara.wide_resnet import generate_model
+    from wama_modules.utils import load_weights
+    m = generate_model()
+    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\wideresnet\wideresnet-50-kinetics.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+    f_list = m(torch.ones([2,3,64,64,64]))
+    _ = [print(i.shape) for i in f_list]
+```
 ### 5.3 ??? `3D` `video`
 ???
 
@@ -488,6 +594,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 ### 6.2 `wama_modules.utils`
  - `resizeTensor` scale torch tensor, similar to scipy's zoom
  - `tensor2array` transform tensor to ndarray
+ - `load_weights` load torch weights and print loading details(miss keys and match keys)
 
 <details>
 <summary> Click here to see demo code </summary>
