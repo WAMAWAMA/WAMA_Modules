@@ -384,7 +384,7 @@ current pretrained support: (这里给一个表格，来自哪里，多少权重
  - 3D: medicalnet, 3D resnet, 3D densenet...
 
 
-### 🔘5.1  smp encoders `2D`
+### 5.1  smp encoders `2D`
 
 smp (119 pretrained weights)
 
@@ -398,7 +398,7 @@ f_list = m(torch.ones([2,3,128,128]))
 _ = [print(i.shape) for i in f_list]
 ```
 
-### 🔘5.2  timm encoders `2D`
+### 5.2  timm encoders `2D`
 timm (400+ pretrained weights)
 ```python
 import timm
@@ -409,7 +409,7 @@ m = timm.create_model(
 f_list = m(torch.ones([2,3,128,128]))
 _ = [print(i.shape) for i in f_list]
 ```
-### 🔘5.3  Transformers (🤗 Huggingface )  `2D`
+### 5.3  Transformers (🤗 Huggingface )  `2D`
 
 transformers, supper powered by Huggingface ( with 80000+ pretrained weights)
 
@@ -445,11 +445,11 @@ m = load_weights(m, weights)
 
 ```
 
-### 🔘5.2  radimagenet `2D` `medical image`
+### 5.2  radimagenet `2D` `medical image`
 ???
 
 
-### 🔘5.3 ResNets3D_kenshohara `3D` `video`
+### 5.3 ResNets3D_kenshohara `3D` `video`
 3D ResNets3D_kenshohara (21 weights)
 ```python
  import torch
@@ -473,7 +473,7 @@ m = load_weights(m, weights)
     f_list = m(torch.ones([2,3,64,64,64]))
     _ = [print(i.shape) for i in f_list]
 ```
-### 🔘5.3 VC3D_kenshohara `3D` `video`
+### 5.3 VC3D_kenshohara `3D` `video`
 3D VC3D_kenshohara (13 weights)
 ```python
  import torch
@@ -506,10 +506,10 @@ m = load_weights(m, weights)
     f_list = m(torch.ones([2,3,64,64,64]))
     _ = [print(i.shape) for i in f_list]
 ```
-### 🔘5.3 ??? `3D` `video`
+### 5.3 ??? `3D` `video`
 ???
 
-### 🔘5.3 ??? `3D` `medical image`
+### 5.3 ??? `3D` `medical image`
 ???
 
 
@@ -518,7 +518,7 @@ m = load_weights(m, weights)
 
 ## 6. All modules and functions
 
-### 🔘6.1 `wama_modules.BaseModule`
+### 6.1 `wama_modules.BaseModule`
 
 #### 6.1.1 Pooling
  - `GlobalAvgPool` Global average pooling
@@ -594,7 +594,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 ```
 </details>
 
-### 🔘6.2 `wama_modules.utils`
+### 6.2 `wama_modules.utils`
  - `resizeTensor` scale torch tensor, similar to scipy's zoom
  - `tensor2array` transform tensor to ndarray
  - `load_weights` load torch weights and print loading details(miss keys and match keys)
@@ -608,7 +608,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 </details>
 
 
-### 🔘6.3 `wama_modules.Attention`
+### 6.3 `wama_modules.Attention`
  - `SCSEModule`
  - `NonLocal`
 
@@ -621,7 +621,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 </details>
 
 
-### 🔘5.4 `wama_modules.Encoder`
+### 5.4 `wama_modules.Encoder`
  - `VGGEncoder`
  - `ResNetEncoder`
  - `DenseNetEncoder`
@@ -636,7 +636,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 </details>
 
 
-### 🔘5.5 `wama_modules.Decoder`
+### 5.5 `wama_modules.Decoder`
  - `UNet_decoder`
 
 <details>
@@ -648,7 +648,7 @@ print(inputs3D.shape, GAMP(inputs3D).shape)
 </details>
 
 
-### 🔘5.6 `wama_modules.Neck`
+### 5.6 `wama_modules.Neck`
  - `FPN`
 
 <details>
@@ -695,7 +695,7 @@ _ = [print(i.shape) for i in f_listB]
 </details>
 
 
-### 🔘5.7 `wama_modules.Transformer`
+### 5.7 `wama_modules.Transformer`
  - `FeedForward`
  - `MultiHeadAttention`
  - `TransformerEncoderLayer`
