@@ -5,29 +5,31 @@
 *A PyTorch module library for building 1D/2D/3D networks flexibly ~*
 
 Highlights (*Simple-to-use & Function-rich!*)
- - Simple code that show all forward processes succinctly
- - Output as many features as possible for fast reuse
- - Support 1D / 2D / 3D networks
- - Easy to integrate with any other networks
+ - Simple code that show whole forward processes succinctly
+ - Output rich features and attention map for fast reuse
+ - Support 1D / 2D / 3D networks (CNNs, GNNs, Transformers...)
+ - Easy and flexible to integrate with any other network
  - 🚀 Abundant Pretrained weights: Including 80000+ `2D weights` and 80+ `3D weights`
 
 ## 1. Installation
- - 🔥1.1 [`wama_modules`](https://github.com/WAMAWAMA/wama_modules) (*Basic*) 
+🔥 [wama_modules](https://github.com/WAMAWAMA/wama_modules) `Basic` `1D` `2D` `3D`
 
-Install *wama_modules* use ↓
+Install `wama_modules` with command ↓
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
 ```
 
- Or you can directly copy the *wama_modules* folder to use
+ *Or you can directly copy the `wama_modules` folder to use
 
- - 💧1.2 [`segmentation_models_pytorch`](https://github.com/qubvel/segmentation_models.pytorch) (*Optional*) 
+💧 [segmentation_models_pytorch](https://github.com/qubvel/segmentation_models.pytorch) `Optional` `2D` `100+ pretrained weights`
 
 <details>
 <summary> Introduction and installation command </summary>
 
-`segmentation_models_pytorch` (called *smp*)
+`segmentation_models_pytorch` (called `smp`)
 is a 2D CNN lib includes many backbones and decoders, which is highly recommended to install for cooperating with this library. 
+
+Our code have already contained `smp`, but you can still install the latest version with the code below.
 
 Install with pip：
 ```
@@ -40,13 +42,14 @@ pip install git+https://github.com/rwightman/pytorch-image-models.git
 
 </details>
 
- - 💧1.3 [`transformers`](https://github.com/huggingface/transformers) (*Optional*) 
+💧 [transformers](https://github.com/huggingface/transformers) `Optional` `2D` `80000+ pretrained weights`
 
 <details>
 <summary> Introduction and installation command </summary>
 
-`transformer` is a lib includes abundant Transformer structures, which is highly recommended to install for cooperating with this library. 
-Install *transformer* use ↓
+`transformer` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
+
+Install `transformer` use ↓
 ```
 pip install transformers
 ```
@@ -54,12 +57,12 @@ pip install transformers
 
 </details>
 
- - 💧1.4 [`timm`](https://github.com/rwightman/pytorch-image-models) (*Optional*) 
+💧 [timm](https://github.com/rwightman/pytorch-image-models) `Optional` `2D` `400+ pretrained weights` 
 
 <details>
 <summary> Introduction and installation command </summary>
 
-`timm`*` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
+`timm` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
 Install *transformer* use ↓
 
 Install with pip:
