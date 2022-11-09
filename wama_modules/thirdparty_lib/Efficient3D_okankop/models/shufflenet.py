@@ -68,7 +68,7 @@ class Bottleneck(nn.Module):
 
 class ShuffleNet(nn.Module):
     def __init__(self,
-                 groups,
+                 groups=3,
                  width_mult=1,
                  num_classes=400):
         super(ShuffleNet, self).__init__()
@@ -91,20 +91,14 @@ class ShuffleNet(nn.Module):
         else:
             raise ValueError(
                 """{} groups is not supported for
-                   1x1 Grouped Convolutions""".format(num_groups))
+                   1x1 Grouped Convolutions""".format(groups))
         out_planes = [int(i * width_mult) for i in out_planes]
         self.in_planes = out_planes[0]
-        self.conv1   = conv_bn(3, self.in_planes, stride=(1,2,2))
+        self.conv1 = conv_bn(3, self.in_planes, stride=(1,2,2))
         self.maxpool = nn.MaxPool3d(kernel_size=3, stride=2, padding=1)
-        self.layer1  = self._make_layer(out_planes[1], num_blocks[0], self.groups)
-        self.layer2  = self._make_layer(out_planes[2], num_blocks[1], self.groups)
-        self.layer3  = self._make_layer(out_planes[3], num_blocks[2], self.groups)
-
-        # building classifier
-        self.classifier = nn.Sequential(
-                            nn.Dropout(0.2),
-                            nn.Linear(out_planes[3], self.num_classes)
-                            )
+        self.layer1 = self._make_layer(out_planes[1], num_blocks[0], self.groups)
+        self.layer2 = self._make_layer(out_planes[2], num_blocks[1], self.groups)
+        self.layer3 = self._make_layer(out_planes[3], num_blocks[2], self.groups)
 
     def _make_layer(self, out_planes, num_blocks, groups):
         layers = []
@@ -115,15 +109,17 @@ class ShuffleNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        f_list = []
         out = self.conv1(x)
         out = self.maxpool(out)
+        f_list.append(out)
         out = self.layer1(out)
+        f_list.append(out)
         out = self.layer2(out)
+        f_list.append(out)
         out = self.layer3(out)
-        out = F.avg_pool3d(out, out.data.size()[-3:])
-        out = out.view(out.size(0), -1)
-        out = self.classifier(out)
-        return out
+        f_list.append(out)
+        return f_list
 
 def get_fine_tuning_parameters(model, ft_portion):
     if ft_portion == "complete":

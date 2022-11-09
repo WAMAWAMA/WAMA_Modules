@@ -114,10 +114,6 @@ class ResNet(nn.Module):
     def __init__(self,
                  block,
                  layers,
-                 sample_input_D,
-                 sample_input_H,
-                 sample_input_W,
-                 num_seg_classes,
                  shortcut_type='B',
                  no_cuda = False):
         self.inplanes = 64
@@ -141,32 +137,6 @@ class ResNet(nn.Module):
             block, 256, layers[2], shortcut_type, stride=1, dilation=2)
         self.layer4 = self._make_layer(
             block, 512, layers[3], shortcut_type, stride=1, dilation=4)
-
-        self.conv_seg = nn.Sequential(
-                                        nn.ConvTranspose3d(
-                                        512 * block.expansion,
-                                        32,
-                                        2,
-                                        stride=2
-                                        ),
-                                        nn.BatchNorm3d(32),
-                                        nn.ReLU(inplace=True),
-                                        nn.Conv3d(
-                                        32,
-                                        32,
-                                        kernel_size=3,
-                                        stride=(1, 1, 1),
-                                        padding=(1, 1, 1),
-                                        bias=False), 
-                                        nn.BatchNorm3d(32),
-                                        nn.ReLU(inplace=True),
-                                        nn.Conv3d(
-                                        32,
-                                        num_seg_classes,
-                                        kernel_size=1,
-                                        stride=(1, 1, 1),
-                                        bias=False) 
-                                        )
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -202,17 +172,22 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        f_list= []
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
+        f_list.append(x)
         x = self.layer1(x)
+        f_list.append(x)
         x = self.layer2(x)
+        f_list.append(x)
         x = self.layer3(x)
+        f_list.append(x)
         x = self.layer4(x)
-        x = self.conv_seg(x)
+        f_list.append(x)
 
-        return x
+        return f_list
 
 def resnet10(**kwargs):
     """Constructs a ResNet-18 model.

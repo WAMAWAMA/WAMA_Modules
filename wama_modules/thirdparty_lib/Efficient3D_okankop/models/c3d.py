@@ -17,10 +17,7 @@ from functools import partial
 
 
 class C3D(nn.Module):
-    def __init__(self,
-                 sample_size,
-                 sample_duration,
-                 num_classes=600):
+    def __init__(self,):
 
         super(C3D, self).__init__()
         self.group1 = nn.Sequential(
@@ -58,32 +55,19 @@ class C3D(nn.Module):
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(2, 2, 2), padding=(0, 1, 1)))
 
-        last_duration = int(math.floor(sample_duration / 16))
-        last_size = int(math.ceil(sample_size / 32))
-        self.fc1 = nn.Sequential(
-            nn.Linear((512 * last_duration * last_size * last_size) , 4096),
-            nn.ReLU(),
-            nn.Dropout(0.5))
-        self.fc2 = nn.Sequential(
-            nn.Linear(4096, 4096),
-            nn.ReLU(),
-            nn.Dropout(0.5))
-        self.fc = nn.Sequential(
-            nn.Linear(4096, num_classes))         
-
-        
-
     def forward(self, x):
+        f_list = []
         out = self.group1(x)
+        f_list.append(out)
         out = self.group2(out)
+        f_list.append(out)
         out = self.group3(out)
+        f_list.append(out)
         out = self.group4(out)
+        f_list.append(out)
         out = self.group5(out)
-        out = out.view(out.size(0), -1)
-        out = self.fc1(out)
-        out = self.fc2(out)
-        out = self.fc(out)
-        return out
+        f_list.append(out)
+        return f_list
 
 
 def get_fine_tuning_parameters(model, ft_portion):

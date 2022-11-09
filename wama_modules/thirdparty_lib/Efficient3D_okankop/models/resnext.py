@@ -85,11 +85,8 @@ class ResNeXt(nn.Module):
     def __init__(self,
                  block,
                  layers,
-                 sample_size,
-                 sample_duration,
                  shortcut_type='B',
-                 cardinality=32,
-                 num_classes=400):
+                 cardinality=32,):
         self.inplanes = 64
         super(ResNeXt, self).__init__()
         self.conv1 = nn.Conv3d(
@@ -117,12 +114,6 @@ class ResNeXt(nn.Module):
             block, 512, layers[2], shortcut_type, cardinality, stride=2)
         self.layer4 = self._make_layer(
             block, 1024, layers[3], shortcut_type, cardinality, stride=2)
-        last_duration = int(math.ceil(sample_duration / 16))
-        #last_duration = 1
-        last_size = int(math.ceil(sample_size / 32))
-        self.avgpool = nn.AvgPool3d(
-            (last_duration, last_size, last_size), stride=1)
-        self.fc = nn.Linear(cardinality * 32 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -164,22 +155,22 @@ class ResNeXt(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        f_list= []
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
-
+        f_list.append(x)
         x = self.layer1(x)
+        f_list.append(x)
         x = self.layer2(x)
+        f_list.append(x)
         x = self.layer3(x)
+        f_list.append(x)
         x = self.layer4(x)
+        f_list.append(x)
 
-        x = self.avgpool(x)
-
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
-
-        return x
+        return f_list
 
 
 def get_fine_tuning_parameters(model, ft_portion):

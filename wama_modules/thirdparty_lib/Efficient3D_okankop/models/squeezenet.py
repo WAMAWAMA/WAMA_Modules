@@ -53,62 +53,32 @@ class Fire(nn.Module):
 
 class SqueezeNet(nn.Module):
 
-    def __init__(self,
-                 sample_size,
-                 sample_duration,			
-    	         version=1.1,
-    	         num_classes=600):
+    def __init__(self,):
         super(SqueezeNet, self).__init__()
-        if version not in [1.0, 1.1]:
-            raise ValueError("Unsupported SqueezeNet version {version}:"
-                             "1.0 or 1.1 expected".format(version=version))
-        self.num_classes = num_classes
-        last_duration = int(math.ceil(sample_duration / 16))
-        last_size = int(math.ceil(sample_size / 32))
-        if version == 1.0:
+        # if version not in [1.0, 1.1]:
+        #     raise ValueError("Unsupported SqueezeNet version {version}:"
+        #                      "1.0 or 1.1 expected".format(version=version))
+
+        # if version == 1.1:
+        if True:
             self.features = nn.Sequential(
-                nn.Conv3d(3, 96, kernel_size=7, stride=(1,2,2), padding=(3,3,3)),
-                nn.BatchNorm3d(96),
-                nn.ReLU(inplace=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(96, 16, 64, 64),
-                Fire(128, 16, 64, 64, use_bypass=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(128, 32, 128, 128),
-                Fire(256, 32, 128, 128, use_bypass=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(256, 48, 192, 192),
-                Fire(384, 48, 192, 192, use_bypass=True),
-                Fire(384, 64, 256, 256),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(512, 64, 256, 256, use_bypass=True),
-            )
-        if version == 1.1:
-            self.features = nn.Sequential(
-                nn.Conv3d(3, 64, kernel_size=3, stride=(1,2,2), padding=(1,1,1)),
-                nn.BatchNorm3d(64),
-                nn.ReLU(inplace=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(64, 16, 64, 64),
-                Fire(128, 16, 64, 64, use_bypass=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(128, 32, 128, 128),
-                Fire(256, 32, 128, 128, use_bypass=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(256, 48, 192, 192),
-                Fire(384, 48, 192, 192, use_bypass=True),
-                nn.MaxPool3d(kernel_size=3, stride=2, padding=1),
-                Fire(384, 64, 256, 256),
-                Fire(512, 64, 256, 256, use_bypass=True),
+                nn.Conv3d(3, 64, kernel_size=3, stride=(1,2,2), padding=(1,1,1)), # 0
+                nn.BatchNorm3d(64), # 1
+                nn.ReLU(inplace=True), # 2
+                nn.MaxPool3d(kernel_size=3, stride=2, padding=1), # todo 3
+                Fire(64, 16, 64, 64), # 4
+                Fire(128, 16, 64, 64, use_bypass=True), # 5
+                nn.MaxPool3d(kernel_size=3, stride=2, padding=1), # todo 6
+                Fire(128, 32, 128, 128), # 7
+                Fire(256, 32, 128, 128, use_bypass=True), # 8
+                nn.MaxPool3d(kernel_size=3, stride=2, padding=1), # todo 9
+                Fire(256, 48, 192, 192), # 10
+                Fire(384, 48, 192, 192, use_bypass=True), # 11
+                nn.MaxPool3d(kernel_size=3, stride=2, padding=1), # todo 12
+                Fire(384, 64, 256, 256), # 13
+                Fire(512, 64, 256, 256, use_bypass=True), # todo 14
             )
         # Final convolution is initialized differently form the rest
-        final_conv = nn.Conv3d(512, self.num_classes, kernel_size=1)
-        self.classifier = nn.Sequential(
-            nn.Dropout(p=0.5),
-            final_conv,
-            nn.ReLU(inplace=True),
-            nn.AvgPool3d((last_duration, last_size, last_size), stride=1)
-        )
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -119,9 +89,12 @@ class SqueezeNet(nn.Module):
 
 
     def forward(self, x):
-        x = self.features(x)
-        x = self.classifier(x)
-        return x.view(x.size(0), -1)
+        f_list = []
+        for i in range(len(self.features)):
+            x = self.features[i](x)
+            if i in [3,6,9,12,14]:
+                f_list.append(x)
+        return f_list
 
 
 def get_fine_tuning_parameters(model, ft_portion):

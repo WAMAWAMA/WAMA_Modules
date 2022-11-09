@@ -5,11 +5,8 @@ See the paper "ShuffleNet V2: Practical Guidelines for Efficient CNN Architectur
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.autograd import Variable
-from collections import OrderedDict
-from torch.nn import init
-import math
+
 
 
 def conv_bn(inp, oup, stride):
@@ -104,9 +101,9 @@ class InvertedResidual(nn.Module):
 
 
 class ShuffleNetV2(nn.Module):
-    def __init__(self, num_classes=600, sample_size=112, width_mult=1.):
+    def __init__(self, width_mult=1.):
         super(ShuffleNetV2, self).__init__()
-        assert sample_size % 16 == 0
+
         
         self.stage_repeats = [4, 8, 4]
         # index 0 is invalid and should never be called.
@@ -121,10 +118,7 @@ class ShuffleNetV2(nn.Module):
             self.stage_out_channels = [-1, 24, 176, 352, 704, 1024]
         elif width_mult == 2.0:
             self.stage_out_channels = [-1, 24, 224, 488, 976, 2048]
-        else:
-            raise ValueError(
-                """{} groups is not supported for
-                       1x1 Grouped Convolutions""".format(num_groups))
+
 
         # building first layer
         input_channel = self.stage_out_channels[1]
@@ -144,24 +138,27 @@ class ShuffleNetV2(nn.Module):
         # make it nn.Sequential
         self.features = nn.Sequential(*self.features)
 
-        # building last several layers
-        self.conv_last      = conv_1x1x1_bn(input_channel, self.stage_out_channels[-1])
-    
-	    # building classifier
-        self.classifier = nn.Sequential(
-                            nn.Dropout(0.2),
-                            nn.Linear(self.stage_out_channels[-1], num_classes)
-                            )
-
     def forward(self, x):
+        f_list= []
         out = self.conv1(x)
         out = self.maxpool(out)
-        out = self.features(out)
-        out = self.conv_last(out)
-        out = F.avg_pool3d(out, out.data.size()[-3:])
-        out = out.view(out.size(0), -1)
-        out = self.classifier(out)
-        return out
+        f_list.append(out)
+
+        x = out
+        for i in range(len(self.features)):
+            x = self.features[i](x)
+            f_list.append(x)
+
+
+        # keep last f
+        f_list_ = []
+        for i, f in enumerate(f_list):
+            if i == 0 or i == len(f_list)-1:
+                f_list_.append(f)
+            elif f.shape[1] != f_list[i+1].shape[1]:
+                f_list_.append(f)
+
+        return f_list_
 
 
 def get_fine_tuning_parameters(model, ft_portion):

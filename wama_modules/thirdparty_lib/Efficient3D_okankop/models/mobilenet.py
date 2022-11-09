@@ -32,13 +32,12 @@ class Block(nn.Module):
 
 
 class MobileNet(nn.Module):
-    def __init__(self, num_classes=600, sample_size=224, width_mult=1.):
+    def __init__(self, width_mult=1.):
         super(MobileNet, self).__init__()
 
         input_channel = 32
         last_channel = 1024
         input_channel = int(input_channel * width_mult)
-        last_channel = int(last_channel * width_mult)
         cfg = [
         # c, n, s
         [64,   1, (2,2,2)],
@@ -59,19 +58,23 @@ class MobileNet(nn.Module):
         # make it nn.Sequential
         self.features = nn.Sequential(*self.features)
 
-        # building classifier
-        self.classifier = nn.Sequential(
-            nn.Dropout(0.2),
-            nn.Linear(last_channel, num_classes),
-        )
 
 
     def forward(self, x):
-        x = self.features(x)
-        x = F.avg_pool3d(x, x.data.size()[-3:])
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
-        return x
+        f_list = []
+        for i in range(len(self.features)):
+            x = self.features[i](x)
+            f_list.append(x)
+
+        # keep last f
+        f_list_ = []
+        for i, f in enumerate(f_list):
+            if i == 0 or i == len(f_list)-1:
+                f_list_.append(f)
+            elif f.shape[1] != f_list[i+1].shape[1]:
+                f_list_.append(f)
+
+        return f_list_
 
 
 def get_fine_tuning_parameters(model, ft_portion):

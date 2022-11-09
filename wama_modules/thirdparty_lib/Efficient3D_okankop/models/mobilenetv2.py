@@ -5,7 +5,6 @@ See the paper "MobileNetV2: Inverted Residuals and Linear Bottlenecks" for more 
 import torch
 import math
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.autograd import Variable
 
 
@@ -68,7 +67,7 @@ class InvertedResidual(nn.Module):
 
 
 class MobileNetV2(nn.Module):
-    def __init__(self, num_classes=1000, sample_size=224, width_mult=1.):
+    def __init__(self, width_mult=1.):
         super(MobileNetV2, self).__init__()
         block = InvertedResidual
         input_channel = 32
@@ -85,7 +84,6 @@ class MobileNetV2(nn.Module):
         ]
 
         # building first layer
-        assert sample_size % 16 == 0.
         input_channel = int(input_channel * width_mult)
         self.last_channel = int(last_channel * width_mult) if width_mult > 1.0 else last_channel
         self.features = [conv_bn(3, input_channel, (1,2,2))]
@@ -101,20 +99,24 @@ class MobileNetV2(nn.Module):
         # make it nn.Sequential
         self.features = nn.Sequential(*self.features)
 
-        # building classifier
-        self.classifier = nn.Sequential(
-            nn.Dropout(0.2),
-            nn.Linear(self.last_channel, num_classes),
-        )
 
-        self._initialize_weights()
 
     def forward(self, x):
-        x = self.features(x)
-        x = F.avg_pool3d(x, x.data.size()[-3:])
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
-        return x
+        f_list = []
+        for i in range(len(self.features)):
+            x = self.features[i](x)
+            f_list.append(x)
+
+        # keep last f
+        f_list_ = []
+        for i, f in enumerate(f_list):
+            if i == 0 or i == len(f_list)-1:
+                f_list_.append(f)
+            elif f.shape[1] != f_list[i+1].shape[1] and f.shape[2:] != f_list[i+1].shape[2:]:
+                f_list_.append(f)
+
+        return f_list_
+
 
     def _initialize_weights(self):
         for m in self.modules():

@@ -1,6 +1,5 @@
 # ωαмα m⚙️dules
 
-(🚧 still under building, but feel free to try current module implementations~)
 
 *A PyTorch module library for building 1D/2D/3D networks flexibly ~*
 
@@ -11,8 +10,14 @@ Highlights (*Simple-to-use & Function-rich!*)
  - Easy and flexible to integrate with any other network
  - 🚀 Abundant Pretrained weights: Including 80000+ `2D weights` and 80+ `3D weights`
 
+*Download all pretrained weights from
+[[Google Drive]](https://drive.google.com/drive/folders/1Pbgrgf8Y8soc6RGMh3bSUSWVIW2WeEmA?usp=sharing)
+or [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
+
+
 ## 1. Installation
-🔥 [wama_modules](https://github.com/WAMAWAMA/wama_modules) `Basic` `1D` `2D` `3D`
+🔥 [wama_modules](https://github.com/WAMAWAMA/wama_modules) 
+`Basic` `1D/2D/3D`
 
 Install `wama_modules` with command ↓
 ```
@@ -21,7 +26,8 @@ pip install git+https://github.com/WAMAWAMA/wama_modules.git
 
  *Or you can directly copy the `wama_modules` folder to use
 
-💧 [segmentation_models_pytorch](https://github.com/qubvel/segmentation_models.pytorch) `Optional` `2D` `100+ pretrained weights`
+💧 [segmentation_models_pytorch](https://github.com/qubvel/segmentation_models.pytorch) 
+`Optional` `2D` `100+ pretrained weights`
 
 <details>
 <summary> Introduction and installation command </summary>
@@ -42,7 +48,8 @@ pip install git+https://github.com/rwightman/pytorch-image-models.git
 
 </details>
 
-💧 [transformers](https://github.com/huggingface/transformers) `Optional` `2D` `80000+ pretrained weights`
+💧 [transformers](https://github.com/huggingface/transformers) 
+`Optional` `2D` `80000+ pretrained weights`
 
 <details>
 <summary> Introduction and installation command </summary>
@@ -57,7 +64,8 @@ pip install transformers
 
 </details>
 
-💧 [timm](https://github.com/rwightman/pytorch-image-models) `Optional` `2D` `400+ pretrained weights` 
+💧 [timm](https://github.com/rwightman/pytorch-image-models) 
+`Optional` `2D` `400+ pretrained weights` 
 
 <details>
 <summary> Introduction and installation command </summary>
@@ -377,16 +385,20 @@ input = torch.ones([3,3,128,128])
 
 ## 5. Guideline 2: Use pretrained weights
 
-All pretrained weights are from third-party codes or repos
+*All pretrained weights are from third-party codes or repos
 
 current pretrained support: (这里给一个表格，来自哪里，多少权重，预训练数据类型，2D还是3D）)
  - 2D: smp, timm, radimagenet...
  - 3D: medicalnet, 3D resnet, 3D densenet...
 
 
+Download all pretrained weights from
+[[Google Drive]](https://drive.google.com/drive/folders/1Pbgrgf8Y8soc6RGMh3bSUSWVIW2WeEmA?usp=sharing)
+or [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
+
 ### 5.1  smp encoders `2D`
 
-smp (119 pretrained weights)
+smp (119 pretrained weights, automatic online download)
 
 ```python
 import torch
@@ -399,7 +411,7 @@ _ = [print(i.shape) for i in f_list]
 ```
 
 ### 5.2  timm encoders `2D`
-timm (400+ pretrained weights)
+timm (400+ pretrained weights, automatic online download)
 ```python
 import timm
 m = timm.create_model(
@@ -411,7 +423,7 @@ _ = [print(i.shape) for i in f_list]
 ```
 ### 5.3  Transformers (🤗 Huggingface )  `2D`
 
-transformers, supper powered by Huggingface ( with 80000+ pretrained weights)
+transformers, supper powered by Huggingface ( with 80000+ pretrained weights,  automatic online download [see modelhub] )
 
 ```python
 import torch
