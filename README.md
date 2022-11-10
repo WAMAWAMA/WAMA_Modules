@@ -602,7 +602,7 @@ _ = [print(i.shape) for i in f_list]
 
 ### 5.7  SMP_qubvel  `119 weights` `2D`
 
-SMP_qubvel (119 weight)
+SMP_qubvel (119 weights, Automatic online download)
 
 <details>
 <summary> Demo code --------------------------------- </summary>
@@ -621,7 +621,7 @@ _ = [print(i.shape) for i in f_list]
 
 ### 5.8  timm  `400+ weights` `2D`
 
-timm (400+ weight)
+timm (400+ weights, Automatic online download)
 
 <details>
 <summary> Demo code --------------------------------- </summary>
@@ -642,7 +642,9 @@ _ = [print(i.shape) for i in f_list]
 
 ### 5.9  transformers  `80000+ weights` `2D`
 
-transformers (80000+ weight), all models please go to Huggingface [[ModelHub]](https://huggingface.co/models)
+transformers (80000+ weights, Automatic online download)
+
+All models please go to Huggingface [[ModelHub]](https://huggingface.co/models)
 
 <details>
 <summary> Demo code --------------------------------- </summary>
