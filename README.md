@@ -3,16 +3,22 @@
 
 *A PyTorch module library for building 1D/2D/3D networks flexibly ~*
 
-Highlights (*Simple-to-use & Function-rich!*)
+(*Simple-to-use & Function-rich!*)
+
+Highlights
  - Simple code that show whole forward processes succinctly
  - Output rich features and attention map for fast reuse
  - Support 1D / 2D / 3D networks (CNNs, GNNs, Transformers...)
  - Easy and flexible to integrate with any other network
  - 🚀 Abundant Pretrained weights: Including 80000+ `2D weights` and 80+ `3D weights`
 
-*Download all pretrained weights from
+
+
+*Download pretrained weights from
 [[Google Drive]](https://drive.google.com/drive/folders/1Pbgrgf8Y8soc6RGMh3bSUSWVIW2WeEmA?usp=sharing)
 or [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
+
+*All modules are detailed in [[Document]](Document_allmodules.md) (🚧 still under building)
 
 
 ## 1. Installation
@@ -23,8 +29,13 @@ Install `wama_modules` with command ↓
 ```
 pip install git+https://github.com/WAMAWAMA/wama_modules.git
 ```
+<details>
+<summary> Other ways to install (or use) wama_modules</summary>
 
- *Or you can directly copy the `wama_modules` folder to use
+ -  Way1: Download code and run `python setup.py install`
+ -  Way2: Directly copy the folder `wama_modules` into your project path
+
+</details>
 
 💧 [segmentation_models_pytorch](https://github.com/qubvel/segmentation_models.pytorch) 
 `Optional` `2D` `100+ pretrained weights`
@@ -33,15 +44,15 @@ pip install git+https://github.com/WAMAWAMA/wama_modules.git
 <summary> Introduction and installation command </summary>
 
 `segmentation_models_pytorch` (called `smp`)
-is a 2D CNN lib includes many backbones and decoders, which is highly recommended to install for cooperating with this library. 
+is a 2D CNN lib including many backbones and decoders, which is highly recommended to install for cooperating with this library. 
 
-Our code have already contained `smp`, but you can still install the latest version with the code below.
+*Our codes have already contained `smp`, but you can still install the latest version with the code below.
 
-Install with pip：
+Install with pip ↓
 ```
 pip install segmentation-models-pytorch
 ```
-Install the latest version:
+Install the latest version ↓
 ```
 pip install git+https://github.com/rwightman/pytorch-image-models.git
 ```
@@ -54,13 +65,12 @@ pip install git+https://github.com/rwightman/pytorch-image-models.git
 <details>
 <summary> Introduction and installation command </summary>
 
-`transformer` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
+`transformer` (powered by Huggingface) is a lib including super abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
 
-Install `transformer` use ↓
+Install `transformer` with pip ↓
 ```
 pip install transformers
 ```
-
 
 </details>
 
@@ -71,13 +81,12 @@ pip install transformers
 <summary> Introduction and installation command </summary>
 
 `timm` is a lib includes abundant CNN and Transformer structures, which is highly recommended to install for cooperating with this library. 
-Install *transformer* use ↓
 
-Install with pip:
+Install with pip ↓
 ```
 pip install timm
 ```
-Install the latest version:
+Install the latest version ↓
 ```
 pip install git+https://github.com/rwightman/pytorch-image-models.git
 ```
@@ -85,17 +94,34 @@ pip install git+https://github.com/rwightman/pytorch-image-models.git
 
 
 ## 2. Update list
- - 2022/11/5:  Open the source code, version `v0.0.1-beta`
+ - 2022/11/11:  The birthday of this code, version `v0.0.1`
  - ...
 
 
 ## 3. Main modules and network architectures
-Here I'll give an overview of this repo
+An overview of this repo (let's call `wama_modules` as `wm`)
+
+
+|File|Description  | Main class or function  |
+|---|---|---|
+|`wm.utils`          |Some operations on tensors and pre-training weights | `resizeTensor()` `tensor2array()` `load_weights()` |
+|`wm.thirdparty_lib` |2D/3D network structures (CNN/GNN/Transformer) from other repositories, and all are with pre-trained weights 🚀  | `MedicalNet` `C3D` `3D_DenseNet` `3D_shufflenet` `transformers.ConvNextModel` `transformers.SwinModel` `Radimagenet`|
+|`wm.Attention`      |Some attention-based plugins   | `SCSEModule` `NonLocal`  |
+|`wm.BaseModule`     |Basic modules(layers). For example, BottleNeck block (ResBlock) in ResNet, and DenseBlock in DenseNet, etc.   |`MakeNorm()` `MakeConv()` `MakeActive()` `VGGBlock` `ResBlock` `DenseBlock` |
+|`wm.Encoder`        |Some encoders such like ResNet or DenseNet, but with more flexibility for building the network modularly, and 1D/2D/3D are all supported   |`VGGEncoder` `ResNetEncoder` `DenseNetEncoder` |
+|`wm.Decoder`        |Some encoders with more flexibility for building the network modularly, and 1D/2D/3D are all supported   | `UNet_decoder`  |
+|`wm.Neck`           |Modules for making the multi-scale features (from encoder) interact with each other to generate stronger features | `FPN` |
+|`wm.Transformer`    |Some self-attention or cross-attention modules, which can be used to build ViT, DETR or TransUnet   | `TransformerEncoderLayer` `TransformerDecoderLayer` |
+
+
+ - How to build your networks modularly and freely? 👉 See 'Guideline 1: Build networks modularly' below ~
+ - How to use pretrained model with `wm.thirdparty_lib`? 👉 See 'Guideline 2: Use pretrained weights' below ~
+
+
+
 
 ## 4. Guideline 1: Build networks modularly
-How to build a network modularly? 
-
-The answer is a paradigm of building networks:
+How to build a network modularly?  Here's a paradigm:
 
 ***'Design architecture according to tasks, pick modules according to architecture'***
 
@@ -130,18 +156,15 @@ Here are more demos shown below ↓ (Click to view codes, or visit the `demo` fo
 
 
 
+
+
+
+*Todo-demo list (under preparation and coming soon...) ↓
+
 <details>
 <summary> Demo1: Build a 2D vgg16  </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -149,14 +172,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo2: Build a 3D resnet50  </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -166,14 +181,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo3: Build a 3D densenet121  </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -182,14 +189,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo4: Build a Unet  </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -198,14 +197,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo5: Build a Unet with a resnet50 encoder  </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -213,14 +204,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo6: Build a Unet with a resnet50 encoder and a FPN </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -228,14 +211,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo7: Build a multi-task model for segmentation and classification</summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -245,14 +220,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo8: Build a C-tran model for multi-label classification</summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -261,14 +228,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo9: Build a Q2L model for multi-label classification</summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -276,14 +235,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo10: Build a ML-Decoder model for multi-label classification</summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -292,14 +243,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo11: Build a ML-GCN model for multi-label classification</summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -308,14 +251,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo12: Build a UCTransNet model for segmentation </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -323,14 +258,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo13: Build a model for multiple inputs (1D signal and 2D image) </summary>
 
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -339,14 +266,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo14: Build a 2D Unet with pretrained Resnet50 encoder (1D signal and 2D image) </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -355,14 +274,6 @@ input = torch.ones([3,3,128,128])
 <summary> Demo15: Build a 3D DETR model for object detection </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
@@ -370,60 +281,371 @@ input = torch.ones([3,3,128,128])
 <summary> Demo16: Build a 3D VGG with SE-attention module for multi-instanse classification </summary>
  
 ```python
-import wama_modules as ws
-import torch
-
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
-
-input = torch.ones([3,3,128,128])
-
 ```
 </details>
 
 
 
-## 5. Guideline 2: Use pretrained weights
+## 5. Guideline 2: Use pretrained weights 
 
-*All pretrained weights are from third-party codes or repos
+(*All pretrained weights are from third-party codes or repos)
 
-current pretrained support: (这里给一个表格，来自哪里，多少权重，预训练数据类型，2D还是3D）)
- - 2D: smp, timm, radimagenet...
- - 3D: medicalnet, 3D resnet, 3D densenet...
+Currently available pre-training models are shown below ↓
+
+| |Module name| Number of pretrained weights | Pretrained data  | Dimension   |
+|---|---|---|---|---|
+| 1 | `.ResNets3D_kenshohara` | 21 | video| 3D |
+| 2 | `.VC3D_kenshohara` | 13 | video| 3D |
+| 3 | `.Efficient3D_okankop` | 39 | video|3D |
+| 4 | `.MedicalNet_tencent` | 11 | medical image|3D |
+| 5 | `.C3D_jfzhang95` | 1 | video| 3D|
+| 6 | `.C3D_yyuanad` | 1 | video| 3D|
+| 7 | `.SMP_qubvel` | 119 | image|2D |
+| 8 | `timm` | 400+ | image| 2D|
+| 9 | `transformers` | 80000+ | video/image| 2D/3D|
+| 10| `radimagenet` | 1 | medical image| 2D|
 
 
-Download all pretrained weights from
+
+*Download all pretrained weights from
 [[Google Drive]](https://drive.google.com/drive/folders/1Pbgrgf8Y8soc6RGMh3bSUSWVIW2WeEmA?usp=sharing)
 or [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
 
-### 5.1  smp encoders `2D`
+### 5.1  ResNets3D_kenshohara  `21 weights` `3D` 
 
-smp (119 pretrained weights, automatic online download)
+ResNets3D_kenshohara (21 weights)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+ 
+```python
+import torch
+from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet import generate_model
+from wama_modules.utils import load_weights
+m = generate_model(18)
+pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\kenshohara_ResNets3D_weights\resnet\r3d18_KM_200ep.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights)
+f_list = m(torch.ones([2,3,64,64,64]))
+_ = [print(i.shape) for i in f_list]
+
+
+import torch
+from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet2p1d import generate_model
+from wama_modules.utils import load_weights
+m = generate_model(18)
+pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\kenshohara_ResNets3D_weights\resnet2p1d\r2p1d18_K_200ep.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights)
+f_list = m(torch.ones([2,3,64,64,64]))
+_ = [print(i.shape) for i in f_list]
+```
+</details>
+
+### 5.2  VC3D_kenshohara  `13 weights` `3D`
+
+VC3D_kenshohara (13 weights)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
+```python
+# resnet
+import torch
+from wama_modules.thirdparty_lib.VC3D_kenshohara.resnet import generate_model
+from wama_modules.utils import load_weights
+m = generate_model(18)
+pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnet\resnet-18-kinetics.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2,3,64,64,64]))
+_ = [print(i.shape) for i in f_list]
+
+# resnext
+import torch
+from wama_modules.thirdparty_lib.VC3D_kenshohara.resnext import generate_model
+from wama_modules.utils import load_weights
+m = generate_model(101)
+pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnext\resnext-101-64f-kinetics.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2,3,64,64,64]))
+_ = [print(i.shape) for i in f_list]
+
+# wide_resnet
+import torch
+from wama_modules.thirdparty_lib.VC3D_kenshohara.wide_resnet import generate_model
+from wama_modules.utils import load_weights
+m = generate_model()
+pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\wideresnet\wideresnet-50-kinetics.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2,3,64,64,64]))
+_ = [print(i.shape) for i in f_list]
+```
+
+</details>
+
+
+### 5.3  Efficient3D_okankop  `39 weights` `3D`
+
+Efficient3D_okankop (39 weights)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
+```python
+# c3d
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.c3d import get_model
+m = get_model()  # c3d has no pretrained weights
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# mobilenet
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.mobilenet import get_model
+from wama_modules.utils import load_weights
+m = get_model(width_mult = 1.)  # e.g. width_mult = 1 when mobilenet_1.0x
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\mobilenet\jester_mobilenet_1.0x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+m = get_model(width_mult = 2.)  # e.g. width_mult = 2 when mobilenet_2.0x
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\mobilenet\jester_mobilenet_2.0x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# mobilenetv2
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.mobilenetv2 import get_model
+from wama_modules.utils import load_weights
+m = get_model(width_mult = 1.)  # e.g. width_mult = 1 when mobilenet_1.0x
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\mobilenetv2\jester_mobilenetv2_1.0x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+m = get_model(width_mult = 0.45)  # e.g. width_mult = 1 when mobilenet_1.0x
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\mobilenetv2\jester_mobilenetv2_0.45x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# resnet
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.resnet import resnet18, resnet50, resnet101
+from wama_modules.utils import load_weights
+m = resnet18()
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\resnet\kinetics_resnet_18_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+m = resnet50()
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\resnet\kinetics_resnet_50_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+m = resnet101()
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\resnet\kinetics_resnet_101_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# resnext
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.resnext import resnext101
+from wama_modules.utils import load_weights
+m = resnext101()
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\resnext\jester_resnext_101_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# shufflenet
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.shufflenet import get_model
+from wama_modules.utils import load_weights
+m = get_model(groups=3, width_mult=1)
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\shufflenet\jester_shufflenet_1.0x_G3_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+m = get_model(groups=3, width_mult=1.5)
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\shufflenet\jester_shufflenet_1.5x_G3_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# shufflenetv2
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.shufflenetv2 import get_model
+from wama_modules.utils import load_weights
+m = get_model(width_mult=1)
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\shufflenetv2\jester_shufflenetv2_1.0x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+m = get_model(width_mult=2)
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\shufflenetv2\jester_shufflenetv2_2.0x_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+
+
+# squeezenet
+import torch
+from wama_modules.thirdparty_lib.Efficient3D_okankop.models.squeezenet import get_model
+from wama_modules.utils import load_weights
+m = get_model()
+pretrain_path = r"D:\pretrainedweights\Efficient3D_okankop\Efficient3D_okankop_weights\squeezenet\jester_squeezenet_RGB_16_best.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+```
+
+</details>
+
+
+
+### 5.4  MedicalNet_tencent  `11 weights` `3D` `medical`
+
+MedicalNet_tencent (11 weights)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
+```python
+import torch
+from wama_modules.utils import load_weights
+from wama_modules.thirdparty_lib.MedicalNet_Tencent.model import generate_model
+m = generate_model(18)
+pretrain_path = r"D:\pretrainedweights\MedicalNet_Tencent\MedicalNet_weights\resnet_18_23dataset.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
+m = load_weights(m, pretrain_weights, drop_modelDOT=True)
+f_list = m(torch.ones([2, 1, 64, 64, 64]))  # input channel is 1 (not 3 for video)
+_ = [print(i.shape) for i in f_list]
+```
+
+</details>
+
+
+### 5.5  C3D_jfzhang95  `1 weights` `3D`
+
+C3D_jfzhang95 (1 weight)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
+```python
+import torch
+from wama_modules.utils import load_weights
+from wama_modules.thirdparty_lib.C3D_jfzhang95.c3d import C3D
+m = C3D()
+pretrain_path = r"D:\pretrainedweights\C3D_jfzhang95\C3D_jfzhang95_weights\C3D_jfzhang95_C3D.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')
+m = load_weights(m, pretrain_weights)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+```
+
+</details>
+
+
+### 5.6  C3D_yyuanad  `1 weights` `3D`
+
+C3D_yyuanad (1 weight)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
+```python
+import torch
+from wama_modules.utils import load_weights
+from wama_modules.thirdparty_lib.C3D_yyuanad.c3d import C3D
+m = C3D()
+pretrain_path = r"D:\pretrainedweights\C3D_yyuanad\C3D_yyuanad_weights\C3D_yyuanad.pickle"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')
+m = load_weights(m, pretrain_weights)
+f_list = m(torch.ones([2, 3, 64, 64, 64]))
+_ = [print(i.shape) for i in f_list]
+```
+
+</details>
+
+
+### 5.7  SMP_qubvel  `119 weights` `2D`
+
+SMP_qubvel (119 weight)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
 
 ```python
 import torch
 from wama_modules.thirdparty_lib.SMP_qubvel.encoders import get_encoder
 m = get_encoder('resnet18', in_channels=3, depth=5, weights='ssl')
-m = get_encoder('name', in_channels=3, depth=5, weights='ssl')
-m = get_encoder('resnet18', in_channels=3, depth=5, weights='ss')
 f_list = m(torch.ones([2,3,128,128]))
 _ = [print(i.shape) for i in f_list]
 ```
 
-### 5.2  timm encoders `2D`
-timm (400+ pretrained weights, automatic online download)
+</details>
+
+
+
+### 5.8  timm  `400+ weights` `2D`
+
+timm (400+ weight)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
+
 ```python
+import torch
 import timm
 m = timm.create_model(
     'adv_inception_v3',
     features_only=True,
-    pretrained=False,)
+    pretrained=True,)
 f_list = m(torch.ones([2,3,128,128]))
 _ = [print(i.shape) for i in f_list]
 ```
-### 5.3  Transformers (🤗 Huggingface )  `2D`
 
-transformers, supper powered by Huggingface ( with 80000+ pretrained weights,  automatic online download [see modelhub] )
+</details>
+
+
+### 5.9  transformers  `80000+ weights` `2D`
+
+transformers (80000+ weight), all models please go to Huggingface [[ModelHub]](https://huggingface.co/models)
+
+<details>
+<summary> Demo code --------------------------------- </summary>
 
 ```python
 import torch
@@ -434,7 +656,7 @@ m = ConvNextModel.from_pretrained('facebook/convnext-base-224-22k')
 f = m(torch.ones([2,3,224,224]), output_hidden_states=True)
 f_list = f.hidden_states
 _ = [print(i.shape) for i in f_list]
-
+# reload weights
 weights = m.state_dict()
 m1 = ConvNextModel(m.config)
 m = load_weights(m, weights)
@@ -443,291 +665,69 @@ m = load_weights(m, weights)
 import torch
 from transformers import SwinModel
 from wama_modules.utils import load_weights
-
 m = SwinModel.from_pretrained('microsoft/swin-base-patch4-window12-384')
 f = m(torch.ones([2,3,384,384]), output_hidden_states=True)
 f_list = f.reshaped_hidden_states # For transformer, should use reshaped_hidden_states
 _ = [print(i.shape) for i in f_list]
-
+# reload weights
 weights = m.state_dict()
 m1 = SwinModel(m.config)
 m = load_weights(m, weights)
-
-
-
 ```
 
-### 5.2  radimagenet `2D` `medical image`
-???
-
-
-### 5.3 ResNets3D_kenshohara `3D` `video`
-3D ResNets3D_kenshohara (21 weights)
-```python
- import torch
-    from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet import generate_model
-    from wama_modules.utils import load_weights
-    m = generate_model(18)
-    pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\weights\resnet\r3d18_KM_200ep.pth"
-    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
-    m = load_weights(m, pretrain_weights)
-    f_list = m(torch.ones([2,3,64,64,64]))
-    _ = [print(i.shape) for i in f_list]
-
-
-    import torch
-    from wama_modules.thirdparty_lib.ResNets3D_kenshohara.resnet2p1d import generate_model
-    from wama_modules.utils import load_weights
-    m = generate_model(18)
-    pretrain_path = r"D:\pretrainedweights\ResNets3D_kenshohara\weights\resnet2p1d\r2p1d18_K_200ep.pth"
-    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
-    m = load_weights(m, pretrain_weights)
-    f_list = m(torch.ones([2,3,64,64,64]))
-    _ = [print(i.shape) for i in f_list]
-```
-### 5.3 VC3D_kenshohara `3D` `video`
-3D VC3D_kenshohara (13 weights)
-```python
- import torch
-    from wama_modules.thirdparty_lib.VC3D_kenshohara.resnet import generate_model
-    from wama_modules.utils import load_weights
-    m = generate_model(18)
-    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnet\resnet-18-kinetics.pth"
-    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
-    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
-    f_list = m(torch.ones([2,3,64,64,64]))
-    _ = [print(i.shape) for i in f_list]
-
-    import torch
-    from wama_modules.thirdparty_lib.VC3D_kenshohara.resnext import generate_model
-    from wama_modules.utils import load_weights
-    m = generate_model(101)
-    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\resnext\resnext-101-64f-kinetics.pth"
-    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
-    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
-    f_list = m(torch.ones([2,3,64,64,64]))
-    _ = [print(i.shape) for i in f_list]
-
-    import torch
-    from wama_modules.thirdparty_lib.VC3D_kenshohara.wide_resnet import generate_model
-    from wama_modules.utils import load_weights
-    m = generate_model()
-    pretrain_path = r"D:\pretrainedweights\VC3D_kenshohara\VC3D_weights\wideresnet\wideresnet-50-kinetics.pth"
-    pretrain_weights = torch.load(pretrain_path, map_location='cpu')['state_dict']
-    m = load_weights(m, pretrain_weights, drop_modelDOT=True)
-    f_list = m(torch.ones([2,3,64,64,64]))
-    _ = [print(i.shape) for i in f_list]
-```
-### 5.3 ??? `3D` `video`
-???
-
-### 5.3 ??? `3D` `medical image`
-???
+</details>
 
 
 
+### 5.10  radimagenet  `1 weights` `2D` `medical`
 
-
-## 6. All modules and functions
-
-### 6.1 `wama_modules.BaseModule`
-
-#### 6.1.1 Pooling
- - `GlobalAvgPool` Global average pooling
- - `GlobalMaxPool` Global maximum pooling
- - `GlobalMaxAvgPool` GlobalMaxAvgPool = (GlobalAvgPool + GlobalMaxPool) / 2.
+radimagenet (1 weight)
 
 <details>
-<summary> Click here to see demo code </summary>
- 
+<summary> Demo code --------------------------------- </summary>
+
 ```python
-""" demo """
-# import libs
 import torch
-from wama_modules.BaseModule import GlobalAvgPool, GlobalMaxPool, GlobalMaxAvgPool
+from wama_modules.utils import load_weights
+from wama_modules.thirdparty_lib.SMP_qubvel.encoders import get_encoder
+m = get_encoder('resnet50', in_channels=3, depth=5, weights=None)
+pretrain_path = r"D:\pretrainedweights\radimagnet\RadImageNet_models-20221104T172755Z-001\RadImageNet_models\RadImageNet-ResNet50_notop_torch.pth"
+pretrain_weights = torch.load(pretrain_path, map_location='cpu')
+m = load_weights(m, pretrain_weights)
+f_list = m(torch.ones([2,3,128,128]))
+_ = [print(i.shape) for i in f_list]
 
-# make tensor
-inputs1D = torch.ones([3,12,13]) # 1D
-inputs2D = torch.ones([3,12,13,13]) # 2D
-inputs3D = torch.ones([3,12,13,13,13]) # 3D
-
-# build layer
-GAP = GlobalAvgPool()
-GMP = GlobalMaxPool()
-GAMP = GlobalMaxAvgPool()
-
-# test GAP & GMP & GAMP
-print(inputs1D.shape, GAP(inputs1D).shape)
-print(inputs2D.shape, GAP(inputs2D).shape)
-print(inputs3D.shape, GAP(inputs3D).shape)
-
-print(inputs1D.shape, GMP(inputs1D).shape)
-print(inputs2D.shape, GMP(inputs2D).shape)
-print(inputs3D.shape, GMP(inputs3D).shape)
-
-print(inputs1D.shape, GAMP(inputs1D).shape)
-print(inputs2D.shape, GAMP(inputs2D).shape)
-print(inputs3D.shape, GAMP(inputs3D).shape)
 ```
-</details>
 
-
-#### 5.1.2 Norm&Activation
- - `customLayerNorm` a custom implementation of layer normalization
- - `MakeNorm` make normalization layer, includes BN / GN / IN / LN
- - `MakeActive` make activation layer, includes Relu / LeakyRelu
- - `MakeConv` make 1D / 2D / 3D convolutional layer
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
 </details>
 
 
 
-#### 5.1.3 Conv
- - `ConvNormActive` 'Convolution→Normalization→Activation', used in VGG or ResNet
- - `NormActiveConv` 'Normalization→Activation→Convolution', used in DenseNet
- - `VGGBlock` the basic module in VGG
- - `VGGStage` a VGGStage = few VGGBlocks
- - `ResBlock` the basic module in ResNet
- - `ResStage` a ResStage = few ResBlocks
- - `DenseLayer` the basic module in DenseNet
- - `DenseBlock` a DenseBlock = few DenseLayers
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
-
-### 6.2 `wama_modules.utils`
- - `resizeTensor` scale torch tensor, similar to scipy's zoom
- - `tensor2array` transform tensor to ndarray
- - `load_weights` load torch weights and print loading details(miss keys and match keys)
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
 
 
-### 6.3 `wama_modules.Attention`
- - `SCSEModule`
- - `NonLocal`
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
 
 
-### 5.4 `wama_modules.Encoder`
- - `VGGEncoder`
- - `ResNetEncoder`
- - `DenseNetEncoder`
- - `???`
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
 
 
-### 5.5 `wama_modules.Decoder`
- - `UNet_decoder`
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
 
 
-### 5.6 `wama_modules.Neck`
- - `FPN`
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-import torch
-from wama_modules.Neck import FPN
-
-# make multi-scale feature maps
-featuremaps = [
-    torch.ones([3,16,32,32,32]),
-    torch.ones([3,32,24,24,24]),
-    torch.ones([3,64,16,16,16]),
-    torch.ones([3,128,8,8,8]),
-]
-
-# build FPN
-fpn_AddSmall2Big = FPN(in_channels_list=[16, 32, 64, 128],
-         c1=128,
-         c2=256,
-         active='relu',
-         norm='bn',
-         gn_c=8,
-         mode='AddSmall2Big',
-         dim=3,)
-fpn_AddBig2Small = FPN(in_channels_list=[16, 32, 64, 128],
-         c1=128,
-         c2=256,
-         active='relu',
-         norm='bn',
-         gn_c=8,
-         mode='AddBig2Small', # Add big size feature to small size feature, for classification
-         dim=3,)
-
-# forward
-f_listA = fpn_AddSmall2Big(featuremaps)
-f_listB = fpn_AddBig2Small(featuremaps)
-_ = [print(i.shape) for i in featuremaps]
-_ = [print(i.shape) for i in f_listA]
-_ = [print(i.shape) for i in f_listB]
-```
-</details>
 
 
-### 5.7 `wama_modules.Transformer`
- - `FeedForward`
- - `MultiHeadAttention`
- - `TransformerEncoderLayer`
- - `TransformerDecoderLayer`
-
-<details>
-<summary> Click here to see demo code </summary>
- 
-```python
-""" demo """
-```
-</details>
 
 
-## 7. Acknowledgment 🥰
+## 6. Acknowledgment 🥰
 Thanks to these authors and their codes:
 1) https://github.com/ZhugeKongan/torch-template-for-deep-learning
-2) pytorch vit
+2) pytorch vit: https://github.com/lucidrains/vit-pytorch
 3) SMP: https://github.com/qubvel/segmentation_models.pytorch
-4) transformers
-5) medicalnet
+4) transformers: https://github.com/huggingface/transformers
+5) medicalnet: https://github.com/Tencent/MedicalNet
 6) timm: https://github.com/rwightman/pytorch-image-models
+7) ResNets3D_kenshohara: https://github.com/kenshohara/3D-ResNets-PyTorch
+8) VC3D_kenshohara: https://github.com/kenshohara/video-classification-3d-cnn-pytorch
+9) Efficient3D_okankop: https://github.com/okankop/Efficient-3DCNNs
+10) C3D_jfzhang95: https://github.com/jfzhang95/pytorch-video-recognition
+11) C3D_yyuanad: https://github.com/yyuanad/Pytorch_C3D_Feature_Extractor
+12) radimagenet: https://github.com/BMEII-AI/RadImageNet
+13) https://github.com/BMEII-AI/RadImageNet/issues/3
 

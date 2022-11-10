@@ -1,4 +1,5 @@
 """
+Part of the code
 from https://github.com/lucidrains/vit-pytorch
 from https://github.com/SlongLiu/query2labels
 from https://github.com/facebookresearch/detr

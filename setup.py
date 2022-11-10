@@ -15,8 +15,8 @@ except:
 
 setup(
     name='wama_modules',
-    version='0.0.1-beta',
-    description='Nothing',
+    version='0.0.1',
+    description='Enjoy~',
     author='wamawama',
     author_email='wmy19970215@gmail.com',
     python_requires=">=3.6.0",

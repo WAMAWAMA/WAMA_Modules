@@ -500,7 +500,7 @@ class ResStage(nn.Module):
 """
 resnet block: conv norm active
 dense block: norm active conv
-Code of densent is modified based on  https://github.com/ZhugeKongan/torch-template-for-deep-learning/blob/main/models/ClassicNetwork/DenseNet.py
+Code of densenet is modified based on  https://github.com/ZhugeKongan/torch-template-for-deep-learning/blob/main/models/ClassicNetwork/DenseNet.py
 """
 
 

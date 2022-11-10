@@ -190,6 +190,4 @@ class NonLocal(nn.Module):
         return z
 
 
-
-
 # STN

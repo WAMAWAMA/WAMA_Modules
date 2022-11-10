@@ -3,7 +3,6 @@ import torch
 import torch.nn.functional as F
 
 
-
 class tmp_class():
     """
     for debug

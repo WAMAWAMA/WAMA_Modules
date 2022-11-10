@@ -207,11 +207,29 @@ if True:
 
 
 # todo 5 3D C3D_jfzhang95 (1 weight)
-
+if True:
+    import torch
+    from wama_modules.utils import load_weights
+    from wama_modules.thirdparty_lib.C3D_jfzhang95.c3d import C3D
+    m = C3D()
+    pretrain_path = r"D:\pretrainedweights\C3D_jfzhang95\C3D_jfzhang95_weights\C3D_jfzhang95_C3D.pth"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')
+    m = load_weights(m, pretrain_weights)
+    f_list = m(torch.ones([2, 3, 64, 64, 64]))
+    _ = [print(i.shape) for i in f_list]
 
 
 # todo 6 3D C3D_yyuanad (1 weight)
-
+if True:
+    import torch
+    from wama_modules.utils import load_weights
+    from wama_modules.thirdparty_lib.C3D_yyuanad.c3d import C3D
+    m = C3D()
+    pretrain_path = r"D:\pretrainedweights\C3D_yyuanad\C3D_yyuanad_weights\C3D_yyuanad.pickle"
+    pretrain_weights = torch.load(pretrain_path, map_location='cpu')
+    m = load_weights(m, pretrain_weights)
+    f_list = m(torch.ones([2, 3, 64, 64, 64]))
+    _ = [print(i.shape) for i in f_list]
 
 
 # todo 7 2D smp (119 weight)
@@ -264,7 +282,6 @@ if True:
     m = load_weights(m, weights)
 
 
-
 # todo 10 radimagenet (4 weights)
 if True:
     import torch
@@ -276,6 +293,7 @@ if True:
     m = load_weights(m, pretrain_weights)
     f_list = m(torch.ones([2,3,128,128]))
     _ = [print(i.shape) for i in f_list]
+
 
 
 
