@@ -114,8 +114,8 @@ An overview of this repo (let's call `wama_modules` as `wm`)
 |`wm.Transformer`    |Some self-attention or cross-attention modules, which can be used to build ViT, DETR or TransUnet   | `TransformerEncoderLayer` `TransformerDecoderLayer` |
 
 
- - How to build your networks modularly and freely? 👉 See 'Guideline 1: Build networks modularly' below ~
- - How to use pretrained model with `wm.thirdparty_lib`? 👉 See 'Guideline 2: Use pretrained weights' below ~
+ - How to build your networks modularly and freely? 👉 See ['Guideline 1: Build networks modularly'](https://github.com/WAMAWAMA/wama_modules#4-guideline-1-build-networks-modularly)  below ~
+ - How to use pretrained model with `wm.thirdparty_lib`? 👉 See ['Guideline 2: Use pretrained weights'](https://github.com/WAMAWAMA/wama_modules#5-guideline-2-use-pretrained-weights)  below ~
 
 
 
