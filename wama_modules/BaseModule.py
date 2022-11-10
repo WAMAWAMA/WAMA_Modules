@@ -350,7 +350,7 @@ class ResBlock(nn.Module):
     x_in → conv3x3 → norm → active → conv3x3 → norm → active → x_out
         ↘--→ conv1x1 if in_c != out_c) ---↗
 
-    type1: '131', called BasicBlock, used for ResNet 50 and 101 and 152
+    type1: '131', called BottleNeck, used for ResNet 50 and 101 and 152
     x_in → conv3x3 → norm → active → conv3x3 → norm → active → x_out
         ↘--→ conv1x1 if in_c != out_c) ---↗
     """
