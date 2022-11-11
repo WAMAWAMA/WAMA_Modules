@@ -121,31 +121,44 @@ An overview of this repo (let's call `wama_modules` as `wm`)
 
 
 ## 4. Guideline 1: Build networks modularly
-How to build a network modularly?  Here's a paradigm:
+How to build a network modularly?  Here's a paradigm ↓
 
 ***'Design architecture according to tasks, pick modules according to architecture'***
 
 So, network architectures for different tasks can be viewed modularly such as:
- - vgg = vgg_encoder + cls_head
- - Unet = encoder + decoder + seg_ead
- - resnet = resnet_encoder + cls_head
- - densenet = densenet_encoder + cls_head
- - a multi-task net for classification and segmentation = encoder + decoder + cls_head + seg_head
+ - VGG for classification `=` VGG_encoder `+` classification_head
+ - ResNet for classification` = `ResNet_encoder` + `classification_head
+ - Unet for segmentation` = `encoder` + `decoder` + `segmentation_head
+ - A multi-task net for classification and segmentation` = `encoder` + `decoder` + `cls_head` + `seg_head
 
 
 
-For example, build a 3D resnet50 
+For example, build a 3D resnet50 encoder to output multi-scale feature maps ↓
 
 
 ```python
-import wama_modules as ws
+from wama_modules.Encoder import ResNetEncoder
 import torch
 
-encoder = ws.resnet(input_channel = 3, per_stage_channel = [8,16,32,64], dim=3)
-decoder = ws.unet(encoder = encoder, output_channel = 3, dim=3)
+dim = 3  # input is 3D volume
+in_channels = 3
+input = torch.ones([2, in_channels, 64, 64, 64])
+encoder = ResNetEncoder(
+    in_channels,
+    stage_output_channels=[64, 128, 256],
+    blocks=[6, 12, 24],
+    downsample_ration=[0.5, 0.5, 0.5],  # set your downsampling speed
+    dim=dim
+)
+multi_scale_f = encoder(input)
+_ = [print(i.shape) for i in multi_scale_f]
 
-input = torch.ones([3,3,128,128])
-
+# --------------------------------
+# output 👇
+# torch.Size([2, 64, 15, 15, 15])
+# torch.Size([2, 128, 7, 7, 7])
+# torch.Size([2, 256, 3, 3, 3])
+# --------------------------------
 ```
 
 
@@ -155,60 +168,458 @@ input = torch.ones([3,3,128,128])
 Here are more demos shown below ↓ (Click to view codes, or visit the `demo` folder)
 
 
+<details>
+<summary> Demo0: Build a 3D VGG for Single Label Classification  </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import VGGEncoder
+from wama_modules.Head import ClassificationHead
+from wama_modules.BaseModule import GlobalMaxPool
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        f_channel_list = [64, 128, 256, 512]
+        self.encoder = VGGEncoder(
+            in_channel,
+            stage_output_channels=f_channel_list,
+            blocks=[1, 2, 3, 4],
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # cls head
+        self.cls_head = ClassificationHead(label_category_dict, f_channel_list[-1])
+        self.pooling = GlobalMaxPool()
+
+    def forward(self, x):
+        f = self.encoder(x)
+        logits = self.cls_head(self.pooling(f[-1]))
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 64, 64, 64])
+    label_category_dict = dict(is_malignant=4)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('single-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+
+    # output 👇
+    # single-label predicted logits
+    # logits of  is_malignant : torch.Size([2, 4])
+```
+</details>
+
+
+<details>
+<summary> Demo1: Build a 3D ResNet for Single Label Classification </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Head import ClassificationHead
+from wama_modules.BaseModule import GlobalMaxPool
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=f_channel_list,
+            stage_middle_channels=f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # cls head
+        self.cls_head = ClassificationHead(label_category_dict, f_channel_list[-1])
+        self.pooling = GlobalMaxPool()
+
+    def forward(self, x):
+        f = self.encoder(x)
+        logits = self.cls_head(self.pooling(f[-1]))
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 64, 64, 64])
+    label_category_dict = dict(is_malignant=4)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('single-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+
+    # output 👇
+    # single-label predicted logits
+    # logits of  is_malignant : torch.Size([2, 4])
+```
+</details>
+
+
+
+<details>
+<summary> Demo2: Build a  ResNet for Multi-Label Classification </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Head import ClassificationHead
+from wama_modules.BaseModule import GlobalMaxPool
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=f_channel_list,
+            stage_middle_channels=f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # cls head
+        self.cls_head = ClassificationHead(label_category_dict, f_channel_list[-1])
+
+        self.pooling = GlobalMaxPool()
+
+    def forward(self, x):
+        f = self.encoder(x)
+        logits = self.cls_head(self.pooling(f[-1]))
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 64, 64, 64])
+    label_category_dict = dict(shape=4, color=3, other=13)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('multi-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+
+    # out
+    # multi-label predicted logits
+    # logits of  shape : torch.Size([2, 4])
+    # logits of  color : torch.Size([2, 3])
+    # logits of  other : torch.Size([2, 13])
+```
+</details>
+
+
+
+
+<details>
+<summary> Demo3: Build a ResNetUnet for Single Label Segmentation  </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Decoder import UNet_decoder
+from wama_modules.Head import SegmentationHead
+from wama_modules.utils import resizeTensor
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        Encoder_f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=Encoder_f_channel_list,
+            stage_middle_channels=Encoder_f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # decoder
+        Decoder_f_channel_list = [32, 64, 128]
+        self.decoder = UNet_decoder(
+            in_channels_list=Encoder_f_channel_list,
+            skip_connection=[False, True, True],
+            out_channels_list=Decoder_f_channel_list,
+            dim=dim)
+        # seg head
+        self.seg_head = SegmentationHead(
+            label_category_dict,
+            Decoder_f_channel_list[0],
+            dim=dim)
+
+    def forward(self, x):
+        multi_scale_f1 = self.encoder(x)
+        multi_scale_f2 = self.decoder(multi_scale_f1)
+        f_for_seg = resizeTensor(multi_scale_f2[0], size=x.shape[2:])
+        logits = self.seg_head(f_for_seg)
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 128, 128, 128])
+    label_category_dict = dict(organ=3)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('multi-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+
+    # out
+    # multi-label predicted logits
+    # logits of  organ : torch.Size([2, 3, 128, 128, 128])
+```
+</details>
+
+
+
+
+<details>
+<summary> Demo4: Build a ResNetUnet for Multi-Label Segmentation  </summary>
+
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Decoder import UNet_decoder
+from wama_modules.Head import SegmentationHead
+from wama_modules.utils import resizeTensor
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        Encoder_f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=Encoder_f_channel_list,
+            stage_middle_channels=Encoder_f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # decoder
+        Decoder_f_channel_list = [32, 64, 128]
+        self.decoder = UNet_decoder(
+            in_channels_list=Encoder_f_channel_list,
+            skip_connection=[False, True, True],
+            out_channels_list=Decoder_f_channel_list,
+            dim=dim)
+        # seg head
+        self.seg_head = SegmentationHead(
+            label_category_dict,
+            Decoder_f_channel_list[0],
+            dim=dim)
+
+    def forward(self, x):
+        multi_scale_f1 = self.encoder(x)
+        multi_scale_f2 = self.decoder(multi_scale_f1)
+        f_for_seg = resizeTensor(multi_scale_f2[0], size=x.shape[2:])
+        logits = self.seg_head(f_for_seg)
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 128, 128, 128])
+    label_category_dict = dict(organ=3, tumor=4)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('multi-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+    
+    # out
+    # multi-label predicted logits
+    # logits of  organ : torch.Size([2, 3, 128, 128, 128])
+    # logits of  tumor : torch.Size([2, 4, 128, 128, 128])
+```
+</details>
+
+
+
+
+<details>
+<summary> Demo5: Build a MultiTask net for Segmentation and Classfification  </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Decoder import UNet_decoder
+from wama_modules.Head import SegmentationHead, ClassificationHead
+from wama_modules.utils import resizeTensor
+from wama_modules.BaseModule import GlobalMaxPool
+
+
+class Model(nn.Module):
+    def __init__(self,
+                 in_channel,
+                 seg_label_category_dict,
+                 cls_label_category_dict,
+                 dim=2):
+        super().__init__()
+        # encoder
+        Encoder_f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=Encoder_f_channel_list,
+            stage_middle_channels=Encoder_f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+        # decoder
+        Decoder_f_channel_list = [32, 64, 128]
+        self.decoder = UNet_decoder(
+            in_channels_list=Encoder_f_channel_list,
+            skip_connection=[False, True, True],
+            out_channels_list=Decoder_f_channel_list,
+            dim=dim)
+        # seg head
+        self.seg_head = SegmentationHead(
+            seg_label_category_dict,
+            Decoder_f_channel_list[0],
+            dim=dim)
+        # cls head
+        self.cls_head = ClassificationHead(cls_label_category_dict, Encoder_f_channel_list[-1])
+
+        # pooling
+        self.pooling = GlobalMaxPool()
+
+    def forward(self, x):
+        # get encoder features
+        multi_scale_encoder = self.encoder(x)
+        # get decoder features
+        multi_scale_decoder = self.decoder(multi_scale_encoder)
+        # perform segmentation
+        f_for_seg = resizeTensor(multi_scale_decoder[0], size=x.shape[2:])
+        seg_logits = self.seg_head(f_for_seg)
+        # perform classification
+        cls_logits = self.cls_head(self.pooling(multi_scale_encoder[-1]))
+        return seg_logits, cls_logits
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 128, 128, 128])
+    seg_label_category_dict = dict(organ=3, tumor=2)
+    cls_label_category_dict = dict(shape=4, color=3, other=13)
+    model = Model(
+        in_channel=1,
+        cls_label_category_dict=cls_label_category_dict,
+        seg_label_category_dict=seg_label_category_dict,
+        dim=3)
+    seg_logits, cls_logits = model(x)
+    print('multi-label predicted logits')
+    _ = [print('seg logits of ', key, ':', seg_logits[key].shape) for key in seg_logits.keys()]
+    print('-'*30)
+    _ = [print('cls logits of ', key, ':', cls_logits[key].shape) for key in cls_logits.keys()]
+
+    # out
+    # multi-label predicted logits
+    # seg logits of  organ : torch.Size([2, 3, 128, 128, 128])
+    # seg logits of  tumor : torch.Size([2, 2, 128, 128, 128])
+    # ------------------------------
+    # cls logits of  shape : torch.Size([2, 4])
+    # cls logits of  color : torch.Size([2, 3])
+    # cls logits of  other : torch.Size([2, 13])
+```
+</details>
+
+
+
+
+
+<details>
+<summary> Demo6: Build a Unet with a resnet encoder and a FPN neck </summary>
+ 
+```python
+import torch
+import torch.nn as nn
+from wama_modules.Encoder import ResNetEncoder
+from wama_modules.Decoder import UNet_decoder
+from wama_modules.Head import SegmentationHead
+from wama_modules.utils import resizeTensor
+from wama_modules.Neck import FPN
+
+
+class Model(nn.Module):
+    def __init__(self, in_channel, label_category_dict, dim=2):
+        super().__init__()
+        # encoder
+        Encoder_f_channel_list = [64, 128, 256, 512]
+        self.encoder = ResNetEncoder(
+            in_channel,
+            stage_output_channels=Encoder_f_channel_list,
+            stage_middle_channels=Encoder_f_channel_list,
+            blocks=[1, 2, 3, 4],
+            type='131',
+            downsample_ration=[0.5, 0.5, 0.5, 0.5],
+            dim=dim)
+
+        # neck
+        FPN_output_channel = 256
+        FPN_channels = [FPN_output_channel]*len(Encoder_f_channel_list)
+        self.neck = FPN(in_channels_list=Encoder_f_channel_list,
+                 c1=FPN_output_channel//2,
+                 c2=FPN_output_channel,
+                 mode='AddSmall2Big',
+                 dim=dim,)
+
+        # decoder
+        Decoder_f_channel_list = [32, 64, 128]
+        self.decoder = UNet_decoder(
+            in_channels_list=FPN_channels,
+            skip_connection=[True, True, True],
+            out_channels_list=Decoder_f_channel_list,
+            dim=dim)
+        # seg head
+        self.seg_head = SegmentationHead(
+            label_category_dict,
+            Decoder_f_channel_list[0],
+            dim=dim)
+
+    def forward(self, x):
+        multi_scale_encoder = self.encoder(x)
+        multi_scale_neck = self.neck(multi_scale_encoder)
+        multi_scale_decoder = self.decoder(multi_scale_neck)
+        f_for_seg = resizeTensor(multi_scale_decoder[0], size=x.shape[2:])
+        logits = self.seg_head(f_for_seg)
+        return logits
+
+
+if __name__ == '__main__':
+    x = torch.ones([2, 1, 128, 128, 128])
+    label_category_dict = dict(organ=3, tumor=4)
+    model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
+    logits = model(x)
+    print('multi-label predicted logits')
+    _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
+
+    # out
+    # multi-label predicted logits
+    # logits of  organ : torch.Size([2, 3, 128, 128, 128])
+    # logits of  tumor : torch.Size([2, 4, 128, 128, 128])
+```
+</details>
+
+
 
 
 
 
 *Todo-demo list (under preparation and coming soon...) ↓
 
-<details>
-<summary> Demo1: Build a 2D vgg16  </summary>
- 
-```python
-```
-</details>
-
-<details>
-<summary> Demo2: Build a 3D resnet50  </summary>
- 
-```python
-```
-</details>
-
 
 
 <details>
-<summary> Demo3: Build a 3D densenet121  </summary>
- 
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo4: Build a Unet  </summary>
- 
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo5: Build a Unet with a resnet50 encoder  </summary>
- 
-```python
-```
-</details>
-
-<details>
-<summary> Demo6: Build a Unet with a resnet50 encoder and a FPN </summary>
- 
-```python
-```
-</details>
-
-<details>
-<summary> Demo7: Build a multi-task model for segmentation and classification</summary>
+<summary> Demo: Build a TransUnet  </summary>
  
 ```python
 ```
@@ -217,7 +628,7 @@ Here are more demos shown below ↓ (Click to view codes, or visit the `demo` fo
 
 
 <details>
-<summary> Demo8: Build a C-tran model for multi-label classification</summary>
+<summary> Demo: Build a C-tran model for multi-label classification</summary>
  
 ```python
 ```
@@ -225,22 +636,14 @@ Here are more demos shown below ↓ (Click to view codes, or visit the `demo` fo
 
 
 <details>
-<summary> Demo9: Build a Q2L model for multi-label classification</summary>
+<summary> Demo: Build a Q2L model for multi-label classification</summary>
  
 ```python
 ```
 </details>
 
 <details>
-<summary> Demo10: Build a ML-Decoder model for multi-label classification</summary>
- 
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo11: Build a ML-GCN model for multi-label classification</summary>
+<summary> Demo: Build a ML-Decoder model for multi-label classification</summary>
  
 ```python
 ```
@@ -248,22 +651,7 @@ Here are more demos shown below ↓ (Click to view codes, or visit the `demo` fo
 
 
 <details>
-<summary> Demo12: Build a UCTransNet model for segmentation </summary>
- 
-```python
-```
-</details>
-
-<details>
-<summary> Demo13: Build a model for multiple inputs (1D signal and 2D image) </summary>
-
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo14: Build a 2D Unet with pretrained Resnet50 encoder (1D signal and 2D image) </summary>
+<summary> Demo: Build a ML-GCN model for multi-label classification</summary>
  
 ```python
 ```
@@ -271,14 +659,37 @@ Here are more demos shown below ↓ (Click to view codes, or visit the `demo` fo
 
 
 <details>
-<summary> Demo15: Build a 3D DETR model for object detection </summary>
+<summary> Demo: Build a UCTransNet model for segmentation </summary>
  
 ```python
 ```
 </details>
 
 <details>
-<summary> Demo16: Build a 3D VGG with SE-attention module for multi-instanse classification </summary>
+<summary> Demo: Build a model for multiple inputs (1D signal and 2D image) </summary>
+
+```python
+```
+</details>
+
+
+<details>
+<summary> Demo: Build a 2D Unet with pretrained Resnet50 encoder (1D signal and 2D image) </summary>
+ 
+```python
+```
+</details>
+
+
+<details>
+<summary> Demo: Build a 3D DETR model for object detection </summary>
+ 
+```python
+```
+</details>
+
+<details>
+<summary> Demo: Build a 3D VGG with SE-attention module for multi-instanse classification </summary>
  
 ```python
 ```

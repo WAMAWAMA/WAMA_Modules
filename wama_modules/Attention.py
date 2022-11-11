@@ -96,15 +96,6 @@ class NonLocal(nn.Module):
         self.use_bn = use_bn
         self.dim = dim
 
-        """ just for debug
-        dim = 2
-        x = torch.randn([2,12,16, 16])  # 2D
-        in_channels = 12
-        inter_channels = 6
-        use_bn = True
-        self = tmp_class()
-        
-        """
 
         # recommended: the channel size is reduced to half inside the block
         if self.inter_channels is None:
@@ -143,9 +134,6 @@ class NonLocal(nn.Module):
 
     def forward(self, x):
         """
-        :param x:
-        :return:
-
 
         # demo
         x = torch.randn([2,12,16])  # 1D

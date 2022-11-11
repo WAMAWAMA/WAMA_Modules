@@ -8,7 +8,7 @@ from wama_modules.BaseModule import ConvNormActive
 class UNet_decoder(nn.Module):
     def __init__(self,
                  in_channels_list=[64, 128, 256, 512],  # from shallow to deep
-                 skip_connection=[False, True, True],  # from shallow to deep
+                 skip_connection=[True, True, True],  # from shallow to deep
                  out_channels_list=[12, 13, 14],  # from shallow to deep
                  norm='bn',
                  gn_c=8,

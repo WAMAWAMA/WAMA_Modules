@@ -10,7 +10,6 @@ Thanks a lot to the authors of these repos
 import torch
 from torch import nn, einsum
 from einops import rearrange
-from wama_modules.utils import tmp_class
 
 
 class FeedForward(nn.Module):

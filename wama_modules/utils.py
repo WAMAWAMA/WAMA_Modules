@@ -88,5 +88,32 @@ def load_weights(model, state_dict, drop_modelDOT=False):
     return model
 
 
+def MaxMinNorm(array, FirstDimBATCH = True):
+    """
+    :param array:
+    :param FirstDimBATCH: bool, is the first dim batch?  True or False
+    :return:
 
+    # demo for numpy ndarray
+
+
+
+
+    # demo for torch tensor
+
+
+
+
+
+    """
+    def mat2gray(image):
+        """
+        归一化函数（线性归一化）
+        :param image: ndarray
+        :return:
+        """
+        # as dtype = np.float32
+        image = image.astype(np.float32)
+        image = (image - np.min(image)) / (np.max(image) - np.min(image) + 1e-14)
+        return image
 
