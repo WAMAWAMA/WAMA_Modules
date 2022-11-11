@@ -5,15 +5,13 @@ from wama_modules.utils import load_weights
 
 m = ViTModel.from_pretrained('google/vit-base-patch32-224-in21k')
 configuration = m.config
-configuration.image_size = [16, 16]
+configuration.image_size = [16, 8]
 configuration.patch_size = [1, 1]
 configuration.num_channels = 1
 configuration.encoder_stride = 1  # just for MAE decoder, otherwise this paramater is not used
-
-
 m1 = ViTModel(configuration, add_pooling_layer=False)
 
-f = m1(torch.ones([2, 1, 16, 16]), output_hidden_states=True)
+f = m1(torch.ones([2, 1, 16, 8]), output_hidden_states=True)
 
 
 f_list = f.hidden_states  # For transformer, should use reshaped_hidden_states
@@ -41,8 +39,8 @@ m1 = load_weights(m1, weights)
 # test: spatial visualization
 m1 = ViTModel(configuration, add_pooling_layer=False)
 
-input = torch.ones([2, 1, 16, 16])*100
-input[:,:,8:,8:] = input[:,:,8:,8:]*0.
+input = torch.ones([2, 1, 16, 8])*100
+input[:,:,8:] = input[:,:,8:]*0.
 f = m1(input, output_hidden_states=True)
 f_last = f.last_hidden_state
 f_last = f_last[:, 1:]
