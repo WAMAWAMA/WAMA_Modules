@@ -1,7 +1,7 @@
 # ωαмα m⚙️dules
 
 
-*A PyTorch module library for building 1D/2D/3D networks flexibly ~*
+*A PyTorch Computer Vision module library for building 1D/2D/3D networks flexibly ~*
 
 (*Simple-to-use & Function-rich!*)
 
