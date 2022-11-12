@@ -165,7 +165,7 @@ _ = [print(i.shape) for i in multi_scale_f]
 
 
 
-Here are more demos shown below ↓ (Click to view codes, or visit the `demo` folder)
+Here are more demos shown below ↓ (Click to view codes, or visit the [`demo`](demo) folder)
 
 
 <details>
