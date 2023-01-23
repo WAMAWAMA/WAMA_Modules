@@ -877,37 +877,6 @@ if __name__ == '__main__':
 
 
 <details>
-<summary> Demo: Build a C-tran model for multi-label classification</summary>
- 
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo: Build a Q2L model for multi-label classification</summary>
- 
-```python
-```
-</details>
-
-<details>
-<summary> Demo: Build a ML-Decoder model for multi-label classification</summary>
- 
-```python
-```
-</details>
-
-
-<details>
-<summary> Demo: Build a ML-GCN model for multi-label classification</summary>
- 
-```python
-```
-</details>
-
-
-<details>
 <summary> Demo: Build a UCTransNet model for segmentation </summary>
  
 ```python
