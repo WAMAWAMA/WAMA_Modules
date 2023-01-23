@@ -856,6 +856,7 @@ if __name__ == '__main__':
 <summary> Demo: Multi-label network structure 🟢 </summary>
 
 6 different novel multi-label network structures
+
 *all model codes are re-constructed in a very simple way*
 
 |Network| Publication | Demo code  | Paper link| Support multi-class per label|
