@@ -856,6 +856,7 @@ if __name__ == '__main__':
 <summary> Demo: Multi-label network structure 🟢 </summary>
 
 6 different novel multi-label network structures
+*all model codes are re-constructed in a very simple way*
 
 |Network| Publication | Demo code  | Paper link| Support multi-class per label|
 |---|---|---|---|---|
@@ -1391,4 +1392,11 @@ Thanks to these authors and their codes:
 12) radimagenet: https://github.com/BMEII-AI/RadImageNet
 13) https://github.com/BMEII-AI/RadImageNet/issues/3
 14) TransUnet: https://github.com/Beckschen/TransUNet
+15) ML-Decoder: https://github.com/Alibaba-MIIL/ML_Decoder
+16) Q2L: https://github.com/SlongLiu/query2labels
+17) https://github.com/AmrMaghraby/CNN-RNN-A-Unified-Framework-for-Multi-label-Image-Classification
+18) https://github.com/yunjey/pytorch-tutorial/tree/master/tutorials/03-advanced/image_captioning
+19) ML-GCN: code:https://github.com/megvii-research/ML-GCN
+20) C-tran: https://github.com/QData/C-Tran
+21) SSGRL: https://github.com/HCPLab-SYSU/SSGRL
 
