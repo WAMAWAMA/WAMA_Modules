@@ -121,7 +121,7 @@ if __name__ == '__main__':
     image_2D_tensor = (torch.tensor(np.stack([case['img_2D'].astype(np.float32) for case in dataset], 0))).permute(0, 3, 1, 2)
     image_3D_tensor = (torch.tensor(np.stack([case['img_3D'].astype(np.float32) for case in dataset], 0))).permute(0, 4, 1, 2, 3)
 
-    # ML-GCN only support binary labels
+    # CNNRNN only support binary labels
     label_category_dict['weather'] = 2  # 5 → 2, force binary classification
 
 
