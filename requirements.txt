@@ -1,11 +1,16 @@
 efficientnet_pytorch==0.7.1
 einops==0.6.0
-numpy>=1.21.5
+inplace_abn==1.1.0
+matplotlib==3.5.1
+numpy==1.23.5
 pretrainedmodels==0.7.4
-torch>=1.11.0
-torchvision>=0.9.0
+prettytable==3.6.0
+torch==1.11.0
+torchtext==0.12.0
+torchvision==0.12.0
 
 setuptools
 timm
 tqdm
 transformers
+

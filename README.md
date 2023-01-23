@@ -95,6 +95,7 @@ pip install git+https://github.com/rwightman/pytorch-image-models.git
 
 ## 2. Update list
  - 2022/11/11:  The birthday of this code, version `v0.0.1`
+ - 2023/01/23:  Add [demo](demo/multi_label) code of 6 multi-label network structures (Happy Chinese New Year 🎇)
  - ...
 
 
@@ -305,11 +306,11 @@ if __name__ == '__main__':
     label_category_dict = dict(shape=4, color=3, other=13)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  shape : torch.Size([2, 4])
     # logits of  color : torch.Size([2, 3])
     # logits of  other : torch.Size([2, 13])
@@ -370,11 +371,11 @@ if __name__ == '__main__':
     label_category_dict = dict(organ=3)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 128, 128, 128])
 ```
 </details>
@@ -433,11 +434,11 @@ if __name__ == '__main__':
     label_category_dict = dict(organ=3, tumor=4)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
     
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 128, 128, 128])
     # logits of  tumor : torch.Size([2, 4, 128, 128, 128])
 ```
@@ -516,13 +517,13 @@ if __name__ == '__main__':
         seg_label_category_dict=seg_label_category_dict,
         dim=3)
     seg_logits, cls_logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('seg logits of ', key, ':', seg_logits[key].shape) for key in seg_logits.keys()]
     print('-'*30)
     _ = [print('cls logits of ', key, ':', cls_logits[key].shape) for key in cls_logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # seg logits of  organ : torch.Size([2, 3, 128, 128, 128])
     # seg logits of  tumor : torch.Size([2, 2, 128, 128, 128])
     # ------------------------------
@@ -599,11 +600,11 @@ if __name__ == '__main__':
     label_category_dict = dict(organ=3, tumor=4)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 128, 128, 128])
     # logits of  tumor : torch.Size([2, 4, 128, 128, 128])
 ```
@@ -717,11 +718,11 @@ if __name__ == '__main__':
     model = TransUNet(in_channel=1, label_category_dict=label_category_dict, dim=2)
     with torch.no_grad():
         logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 256, 256])
     # logits of  tumor : torch.Size([2, 4, 256, 256])
 ```
@@ -836,17 +837,36 @@ if __name__ == '__main__':
     model = TransUnet(in_channel=1, label_category_dict=label_category_dict, dim=3)
     with torch.no_grad():
         logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 128, 128, 96])
     # logits of  tumor : torch.Size([2, 4, 128, 128, 96])
 ```
 
 </details>
 
+
+
+
+
+<details>
+<summary> Demo: Multi-label network structure 🟢 </summary>
+
+6 different novel multi-label network structures
+
+|Network| Publication | Demo code  | Paper link|
+|---|---|---|---|
+|CNNRNN|CVPR2016|[code](demo/multi_label/Demo_CVPR2016_MultiLabel_CNNRNN.py)|[link](http://openaccess.thecvf.com/content_cvpr_2016/html/Wang_CNN-RNN_A_Unified_CVPR_2016_paper.html)|
+|ML-GCN|CVPR2019|[code](demo/multi_label/Demo_CVPR2019_MultiLabel_ML_GCN.py)|[link](https://arxiv.org/abs/1904.03582)|
+|SSGRL|ICCV2019|[code](demo/multi_label/Demo_ICCV2019_MultiLabel_SSGRL.py)|[link](https://arxiv.org/abs/1908.07325)|
+|C-tran|CVPR2021|[code](demo/multi_label/Demo_CVPR2021_MultiLabel_C_tran.py)|[link](https://arxiv.org/abs/2011.14027)|
+|ML-decoder|arxiv2021|[code](demo/multi_label/Demo_Arxiv2021_MultiLabel_ML_decoder.py)|[link](http://arxiv.org/abs/2111.12933)|
+|Q2L|arxiv2021|[code](demo/multi_label/Demo_ArXiv2021_MultiLabel_Query2Label.py)|[link](https://arxiv.org/abs/2107.10834)|
+
+</details>
 
 
 *Todo-demo list ( 🚧 under preparation and coming soon...) ↓

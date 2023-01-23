@@ -28,7 +28,8 @@ class Model(nn.Module):
 
 if __name__ == '__main__':
     x = torch.ones([2, 1, 64, 64, 64])
-    label_category_dict = dict(is_malignant=4)
+    category_num = 1
+    label_category_dict = dict(is_malignant=category_num)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
     print('single-label predicted logits')

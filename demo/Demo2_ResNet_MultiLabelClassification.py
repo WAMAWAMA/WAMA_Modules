@@ -34,11 +34,11 @@ if __name__ == '__main__':
     label_category_dict = dict(shape=4, color=3, other=13)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  shape : torch.Size([2, 4])
     # logits of  color : torch.Size([2, 3])
     # logits of  other : torch.Size([2, 13])

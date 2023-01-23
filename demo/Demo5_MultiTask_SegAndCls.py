@@ -64,13 +64,13 @@ if __name__ == '__main__':
         seg_label_category_dict=seg_label_category_dict,
         dim=3)
     seg_logits, cls_logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('seg logits of ', key, ':', seg_logits[key].shape) for key in seg_logits.keys()]
     print('-'*30)
     _ = [print('cls logits of ', key, ':', cls_logits[key].shape) for key in cls_logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # seg logits of  organ : torch.Size([2, 3, 128, 128, 128])
     # seg logits of  tumor : torch.Size([2, 2, 128, 128, 128])
     # ------------------------------

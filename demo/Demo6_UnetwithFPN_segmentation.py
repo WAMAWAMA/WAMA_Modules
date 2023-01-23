@@ -57,11 +57,11 @@ if __name__ == '__main__':
     label_category_dict = dict(organ=3, tumor=4)
     model = Model(in_channel=1, label_category_dict=label_category_dict, dim=3)
     logits = model(x)
-    print('multi-label predicted logits')
+    print('multi_label predicted logits')
     _ = [print('logits of ', key, ':', logits[key].shape) for key in logits.keys()]
 
     # out
-    # multi-label predicted logits
+    # multi_label predicted logits
     # logits of  organ : torch.Size([2, 3, 128, 128, 128])
     # logits of  tumor : torch.Size([2, 4, 128, 128, 128])
 

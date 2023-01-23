@@ -22,7 +22,7 @@ class FeedForward(nn.Module):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(dim, hidden_dim),
-            nn.GELU(),
+            nn.GELU(),  # could be relu
             nn.Dropout(dropout),
             nn.Linear(hidden_dim, dim),
             nn.Dropout(dropout)
@@ -169,7 +169,7 @@ class TransformerEncoderLayer(nn.Module):
 
         """
 
-        # norm
+        # pre norm
         q = k = v = self.norm1(tokens)
 
         # add pos_embeddings
@@ -284,7 +284,7 @@ class TransformerDecoderLayer(nn.Module):
 
         # todo stage1: self attention with q_tokens -------------------------------
         if True:
-            # norm
+            # pre norm
             q = k = v = self.norm1(q_tokens)
 
             # add pos_embeddings

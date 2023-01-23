@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
+import numpy as np
+import pickle
 
 
 class tmp_class():
@@ -62,6 +64,7 @@ def resizeTensor(x, scale_factor=None, size=None):
 def tensor2array(tensor):
     return tensor.data.cpu().numpy()
 
+
 def load_weights(model, state_dict, drop_modelDOT=False):
     if drop_modelDOT:
         new_dict = {}
@@ -106,14 +109,43 @@ def MaxMinNorm(array, FirstDimBATCH = True):
 
 
     """
-    def mat2gray(image):
-        """
-        归一化函数（线性归一化）
-        :param image: ndarray
-        :return:
-        """
-        # as dtype = np.float32
-        image = image.astype(np.float32)
-        image = (image - np.min(image)) / (np.max(image) - np.min(image) + 1e-14)
-        return image
+    pass
 
+
+def mat2gray(image):
+    """
+    归一化函数（线性归一化）
+    :param image: ndarray
+    :return:
+    """
+    # as dtype = np.float32
+    image = image.astype(np.float32)
+    image = (image - np.min(image)) / (np.max(image) - np.min(image) + 1e-14)
+    return image
+
+
+def save_as_pkl(save_path, obj):
+    data_output = open(save_path, 'wb')
+    pickle.dump(obj, data_output)
+    data_output.close()
+
+def load_from_pkl(load_path):
+    data_input = open(load_path, 'rb')
+    read_data = pickle.load(data_input)
+    data_input.close()
+    return read_data
+
+
+import matplotlib.pyplot as plt
+def show2D(img):
+    plt.imshow(img)
+    plt.show()
+
+# try:
+#     from mayavi import mlab
+#     def show3D(img3D):
+#         vol = mlab.pipeline.volume(mlab.pipeline.scalar_field(img3D), name='3-d ultrasound ')
+#         mlab.colorbar(orientation='vertical')
+#         mlab.show()
+# except:
+#     pass
