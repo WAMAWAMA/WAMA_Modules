@@ -1,24 +1,23 @@
 # ωαмα m⚙️dules
 
 
-*A PyTorch Computer Vision module library for building 1D/2D/3D networks flexibly ~*
+*A PyTorch Computer Vision (CV) module library for building n-D networks flexibly ~*
 
 (*Simple-to-use & Function-rich!*)
 
 Highlights
- - Simple code that show whole forward processes succinctly
- - Output rich features and attention map for fast reuse
- - Support 1D / 2D / 3D networks (CNNs, GNNs, Transformers...)
- - Easy and flexible to integrate with any other network
- - 🚀 Abundant Pretrained weights: Including 80000+ `2D weights` and 80+ `3D weights`
+ - Simple code and detailed annotation
+ - Easy and flexible to integrate with other codes
+ - Support 1D / 2D / 3D networks (for 1D signal, 2D image, 3D video, 3D medical image...)
+ - Abundant structure: CNN, GNN, Transformer
+ - Friendly [demo](demo) codes
+ - 🚀 Abundant Pretrained weights: including 80000+ `2D weights` and 80+ `3D weights`
 
 
-
-*Download pretrained weights from
+Pretrained weights:
 [[Google Drive]](https://drive.google.com/drive/folders/1Pbgrgf8Y8soc6RGMh3bSUSWVIW2WeEmA?usp=sharing)
-or [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
+ [[Baidu Netdisk `psw: wama` ]](https://pan.baidu.com/s/16sskSM5IuHLbXOC4YF5MQQ?pwd=wama)
 
-*All modules are detailed in [[Document]](Document_allmodules.md) (🚧 still under building)
 
 
 ## 1. Installation
@@ -105,14 +104,15 @@ An overview of this repo (let's call `wama_modules` as `wm`)
 
 |File|Description  | Main class or function  |
 |---|---|---|
-|`wm.utils`          |Some operations on tensors and pre-training weights | `resizeTensor()` `tensor2array()` `load_weights()` |
-|`wm.thirdparty_lib` |2D/3D network structures (CNN/GNN/Transformer) from other repositories, and all are with pre-trained weights 🚀  | `MedicalNet` `C3D` `3D_DenseNet` `3D_shufflenet` `transformers.ConvNextModel` `transformers.SwinModel` `Radimagenet`|
-|`wm.Attention`      |Some attention-based plugins   | `SCSEModule` `NonLocal`  |
-|`wm.BaseModule`     |Basic modules(layers). For example, BottleNeck block (ResBlock) in ResNet, and DenseBlock in DenseNet, etc.   |`MakeNorm()` `MakeConv()` `MakeActive()` `VGGBlock` `ResBlock` `DenseBlock` |
-|`wm.Encoder`        |Some encoders such like ResNet or DenseNet, but with more flexibility for building the network modularly, and 1D/2D/3D are all supported   |`VGGEncoder` `ResNetEncoder` `DenseNetEncoder` |
-|`wm.Decoder`        |Some encoders with more flexibility for building the network modularly, and 1D/2D/3D are all supported   | `UNet_decoder`  |
-|`wm.Neck`           |Modules for making the multi-scale features (from encoder) interact with each other to generate stronger features | `FPN` |
-|`wm.Transformer`    |Some self-attention or cross-attention modules, which can be used to build ViT, DETR or TransUnet   | `TransformerEncoderLayer` `TransformerDecoderLayer` |
+|[`wm.utils`](wama_modules/utils.py)          |Some operations on tensors and pre-training weights | `resizeTensor()` `tensor2array()` `load_weights()` |
+|[`wm.thirdparty_lib`]((wama_modules/thirdparty_lib)  ) |2D/3D network structures (CNN/GNN/Transformer) from other repositories, and all are with pre-trained weights 🚀  | `MedicalNet` `C3D` `3D_DenseNet` `3D_shufflenet` `transformers.ConvNextModel` `transformers.SwinModel` `Radimagenet`|
+|[`wm.Attention`](wama_modules/Attention.py)       |Some attention-based plugins   | `SCSEModule` `NonLocal`  |
+|[`wm.BaseModule`](wama_modules/BaseModule.py)     |Basic modules(layers). For example, BottleNeck block (ResBlock) in ResNet, and DenseBlock in DenseNet, etc.   |`MakeNorm()` `MakeConv()` `MakeActive()` `VGGBlock` `ResBlock` `DenseBlock` |
+|[`wm.Encoder`](wama_modules/Encoder.py)        |Some encoders such like ResNet or DenseNet, but with more flexibility for building the network modularly, and 1D/2D/3D are all supported   |`VGGEncoder` `ResNetEncoder` `DenseNetEncoder` |
+|[`wm.Decoder`](wama_modules/Decoder.py)        |Some encoders with more flexibility for building the network modularly, and 1D/2D/3D are all supported   | `UNet_decoder`  |
+|[`wm.Neck`](wama_modules/Neck.py)           |Modules for making the multi-scale features (from encoder) interact with each other to generate stronger features | `FPN` |
+|[`wm.Transformer`](wama_modules/Transformer.py)    |Some self-attention or cross-attention modules, which can be used to build ViT, DETR or TransUnet   | `TransformerEncoderLayer` `TransformerDecoderLayer` |
+|[`wm.PositionEmbedding`](wama_modules/PositionEmbedding.py)|Some position embedding modules, such as the learnable embedding, or 1/2/3D sincos embedding in MAE or Vit| `PositionalEncoding_1D_sincos` `PositionalEncoding_2D_sincos` `PositionalEncoding_3D_sincos` |
 
 
  - How to build your networks modularly and freely? 👉 See ['Guideline 1: Build networks modularly'](https://github.com/WAMAWAMA/wama_modules#4-guideline-1-build-networks-modularly)  below ~
