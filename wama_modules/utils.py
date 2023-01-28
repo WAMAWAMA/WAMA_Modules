@@ -65,7 +65,7 @@ def tensor2array(tensor):
     return tensor.data.cpu().numpy()
 
 
-def load_weights(model, state_dict, drop_modelDOT=False):
+def load_weights(model, state_dict, drop_modelDOT=False, silence=False):
     if drop_modelDOT:
         new_dict = {}
         for k, v in state_dict.items():
@@ -76,16 +76,17 @@ def load_weights(model, state_dict, drop_modelDOT=False):
     InPretrain_InModel_dict = {k: v for k, v in state_dict.items() if k in net_dict.keys()}
     InPretrain_NotInModel_dict = {k: v for k, v in state_dict.items() if k not in net_dict.keys()}
     NotInPretrain_InModel_dict = {k: v for k, v in net_dict.items() if k not in state_dict.keys()}
-    print('-' * 200)
-    print('keys ( Current model,C ) ', len(net_dict.keys()), net_dict.keys())
-    print('keys ( Pre-trained  ,P ) ', len(pretrain_dict.keys()), pretrain_dict.keys())
-    print('keys (   In C &   In P ) ', len(InPretrain_InModel_dict.keys()), InPretrain_InModel_dict.keys())
-    print('keys ( NoIn C &   In P ) ', len(InPretrain_NotInModel_dict.keys()), InPretrain_NotInModel_dict.keys())
-    print('keys (   In C & NoIn P ) ', len(NotInPretrain_InModel_dict.keys()), NotInPretrain_InModel_dict.keys())
-    print('-' * 200)
-    print('Pretrained keys :', len(InPretrain_InModel_dict.keys()), InPretrain_InModel_dict.keys())
-    print('Non-Pretrained keys:', len(NotInPretrain_InModel_dict.keys()), NotInPretrain_InModel_dict.keys())
-    print('-' * 200)
+    if not silence:
+        print('-' * 200)
+        print('keys ( Current model,C ) ', len(net_dict.keys()), net_dict.keys())
+        print('keys ( Pre-trained  ,P ) ', len(pretrain_dict.keys()), pretrain_dict.keys())
+        print('keys (   In C &   In P ) ', len(InPretrain_InModel_dict.keys()), InPretrain_InModel_dict.keys())
+        print('keys ( NoIn C &   In P ) ', len(InPretrain_NotInModel_dict.keys()), InPretrain_NotInModel_dict.keys())
+        print('keys (   In C & NoIn P ) ', len(NotInPretrain_InModel_dict.keys()), NotInPretrain_InModel_dict.keys())
+        print('-' * 200)
+        print('Pretrained keys :', len(InPretrain_InModel_dict.keys()), InPretrain_InModel_dict.keys())
+        print('Non-Pretrained keys:', len(NotInPretrain_InModel_dict.keys()), NotInPretrain_InModel_dict.keys())
+        print('-' * 200)
     net_dict.update(InPretrain_InModel_dict)
     model.load_state_dict(net_dict)
     return model
