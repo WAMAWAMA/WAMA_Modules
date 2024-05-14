@@ -14,7 +14,7 @@ except:
 
 
 setup(
-    name='wama_modules',
+    name='aini_modules',
     version='0.0.1',
     description='Enjoy~',
     author='wamawama',
