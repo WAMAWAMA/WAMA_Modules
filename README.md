@@ -1,4 +1,4 @@
-# Aini M⚙️dules
+# WAMA M⚙️dules
 
 
 *A PyTorch Computer Vision (CV) module library for building n-D networks flexibly ~*
